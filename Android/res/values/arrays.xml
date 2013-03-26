@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_items">
+        <item>0;All Notes</item>
+        <item>1;Recent</item>
+        <item>2;Starred</item>
+        <item>3;Trash</item>
+    </string-array>
+    
+</resources>

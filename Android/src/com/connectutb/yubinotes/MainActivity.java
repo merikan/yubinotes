@@ -1,15 +1,18 @@
 package com.connectutb.yubinotes;
 
 import android.os.Bundle;
-import android.app.Activity;
+import android.app.ListActivity;
 import android.view.Menu;
 
-public class MainActivity extends Activity {
-
+public class MainActivity extends ListActivity {
+	
+	private String[] nav_items = new String[0];
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		nav_items = getResources().getStringArray(R.array.nav_items);
+		setListAdapter(new MainListAdapter(this, nav_items));	
 	}
 
 	@Override
