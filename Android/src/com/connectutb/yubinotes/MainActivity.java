@@ -2,7 +2,10 @@ package com.connectutb.yubinotes;
 
 import android.os.Bundle;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ListView;
 
 public class MainActivity extends ListActivity {
 	
@@ -21,5 +24,16 @@ public class MainActivity extends ListActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id){
+    	super.onListItemClick(l, v, position, id);
+    	// We retrieve the item that was clicked
+    	Object o = this.getListAdapter().getItem(position);
+    	String keyword = o.toString();
+        Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
+        i.putExtra("list", keyword);
+        startActivity(i);
+    }
 
 }
