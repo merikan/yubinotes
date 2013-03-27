@@ -8,18 +8,14 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-
-        private String iv = "";// iv
+	
         private IvParameterSpec ivspec;
         private SecretKeySpec keyspec;
         private Cipher cipher;
         
-        private String SecretKey = "";// secretKey
-        
         public Crypto(String iv, String SecretKey)
         {
-        		this.iv = iv;
-        		this.SecretKey  = SecretKey;
+
         		
                 ivspec = new IvParameterSpec(iv.getBytes());
 
@@ -73,8 +69,6 @@ public class Crypto {
                 return decrypted;
         }
         
-
-        
         public static String bytesToHex(byte[] data)
         {
                 if (data==null)
@@ -92,8 +86,7 @@ public class Crypto {
                 }
                 return str;
         }
-        
-                
+                    
         public static byte[] hexToBytes(String str) {
                 if (str==null) {
                         return null;
@@ -108,8 +101,6 @@ public class Crypto {
                         return buffer;
                 }
         }
-        
-        
 
         private static String padString(String source)
         {
