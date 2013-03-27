@@ -1,8 +1,13 @@
 package com.connectutb.yubinotes.util;
 
+import java.util.ArrayList;
+
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.format.Time;
 
 public class DbManager extends SQLiteOpenHelper{
 	
@@ -30,14 +35,63 @@ public class DbManager extends SQLiteOpenHelper{
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// TODO Auto-generated method stub
-		
+		// Create the tables
+		String CREATE_NOTES_TABLE = "CREATE TABLE " + TABLE_NOTES + "("
+				+ NOTES_ID + " INTEGER PRIMARY KEY," + NOTES_PT_TITLE + " TEXT,"
+				+ NOTES_TITLE + " TEXT," + NOTES_TEXT + " TEXT,"
+				+ NOTES_CREATED + " TIMESTAMP," + NOTES_MODIFIED + " TIMESTAMP,"
+				+ NOTES_VIEWED + " TIMESTAMP)";
+		db.execSQL(CREATE_NOTES_TABLE);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		// TODO Figure out how to implement database upgrades without dropping the tables
 		
 	}
 
+	public boolean addNote(String uTitle, String Title, String Text){
+		//Add a new note
+		SQLiteDatabase db = this.getWritableDatabase();
+		//Grab current time
+		Time now = new Time();
+		now.setToNow();
+		String current_time = now.toString();
+		
+		ContentValues values = new ContentValues();
+		values.put(NOTES_PT_TITLE, uTitle);
+		values.put(NOTES_TITLE, Title);
+		values.put(NOTES_TEXT, Text);
+		values.put(NOTES_CREATED, current_time);
+		values.put(NOTES_MODIFIED, current_time);
+		values.put(NOTES_VIEWED, current_time);
+		return true;
+	}
+	
+	public String[] listNotes(){
+		//Retrieve a string array with the history
+				ArrayList<String> temp_array = new ArrayList<String>();
+				String[] notes_array = new String[0];
+				//SQL 
+				String sqlQuery = "SELECT * FROM " + TABLE_NOTES;
+				//Define database and cursor
+				SQLiteDatabase db = this.getWritableDatabase(); 
+				Cursor c = db.rawQuery(sqlQuery, null);
+
+				//Loop through the results and add it to the temp_array
+				if (c.moveToFirst()){
+					do{
+						temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + c.getString(c.getColumnIndex(NOTES_PT_TITLE))+ ";" 
+								+ c.getString(c.getColumnIndex(NOTES_CREATED)) +  ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED))); 
+								
+					}while(c.moveToNext());
+				}
+
+				//Close cursor
+				c.close();
+				//Transfer from arraylist to string array
+				notes_array = (String[]) temp_array.toArray(notes_array);
+				//Return the string array
+				return notes_array;
+	}
 }
