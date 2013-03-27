@@ -10,6 +10,16 @@ public class DbManager extends SQLiteOpenHelper{
 	private static final String DATABASE_NAME = "YubiNotesDB";
 	private static final int DATABASE_VERSION = 1;
 	
+	/* Our tables and fields */
+	private static final String TABLE_NOTES= "notes";
+	private static final String NOTES_ID = "id";
+	private static final String NOTES_PT_TITLE = "pt_title";
+	private static final String NOTES_TITLE = "title";
+	private static final String NOTES_TEXT = "text";
+	private static final String NOTES_CREATED = "created_timestamp";
+	private static final String NOTES_MODIFIED = "modified_timestamp";
+	private static final String NOTES_VIEWED = "viewed_timestamp";
+	
 	private Context context;
 
 	//constructor
