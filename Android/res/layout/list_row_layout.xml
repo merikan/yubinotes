@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+     <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#0f0f0f"
+        android:textSize="17sp"
+        android:typeface="sans"
+        android:text="My Note" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textViewTitle"
+        android:layout_below="@+id/textViewTitle"
+        android:layout_marginTop="5dp"
+        android:textColor="#545454"
+        android:textSize="13sp"
+        android:typeface="sans"
+        android:text="Jul 12, 2013" />
+
+
+     <CheckBox
+         android:id="@+id/checkBoxSelect"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignBaseline="@+id/textViewTitle"
+         android:focusable="false"
+         android:text="" />
+
+</RelativeLayout>
