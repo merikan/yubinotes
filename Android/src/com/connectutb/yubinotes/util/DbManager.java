@@ -65,6 +65,10 @@ public class DbManager extends SQLiteOpenHelper{
 		values.put(NOTES_CREATED, current_time);
 		values.put(NOTES_MODIFIED, current_time);
 		values.put(NOTES_VIEWED, current_time);
+		
+		//Inserting the record
+		db.insert(TABLE_NOTES, null, values);
+		db.close();
 		return true;
 	}
 	
@@ -89,7 +93,7 @@ public class DbManager extends SQLiteOpenHelper{
 
 				//Close cursor
 				c.close();
-				//Transfer from arraylist to string array
+				//Convert from arraylist to string array
 				notes_array = (String[]) temp_array.toArray(notes_array);
 				//Return the string array
 				return notes_array;

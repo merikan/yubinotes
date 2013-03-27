@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
      <TextView
-        android:id="@+id/textViewTitle"
+        android:id="@+id/textViewNoteTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -16,7 +16,7 @@
         android:text="My Note" />
 
     <TextView
-        android:id="@+id/textViewDate"
+        android:id="@+id/textViewNoteDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textViewTitle"
@@ -29,7 +29,7 @@
 
 
      <CheckBox
-         android:id="@+id/checkBoxSelect"
+         android:id="@+id/checkBoxNoteSelect"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
