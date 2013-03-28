@@ -119,19 +119,22 @@ public class DbManager extends SQLiteOpenHelper{
 	
 
 	public void deleteNotes(String noteId, boolean trashMode){
-		//Delete note
+		//Delete note or folders and notes associated with that folder
 		SQLiteDatabase db = this.getWritableDatabase();
 		String sql = "DELETE FROM " + TABLE_NOTES + " WHERE " + NOTES_ID + "=" + noteId;
+		String sql2 = "DELETE FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + "=" + noteId;
 		if (trashMode){
 			sql ="UPDATE " + TABLE_NOTES + " SET " + NOTES_TRASH + "=1 WHERE " + NOTES_ID +"=" + noteId;
-		}
+			sql2 = "UPDATE " + TABLE_NOTES + " SET " + NOTES_TRASH + "=1 WHERE " + NOTES_DIR +"=" + noteId;
+		}	
 		db.execSQL(sql);
+		db.execSQL(sql2);
 	}
 	
 	public String[] listNotes(String dirId, int mode){
 		/**
 		 * MODES
-		 * 0 - All Notes (except trashed
+		 * 0 - All Notes (except trashed)
 		 * 1 - Recent
 		 * 2 - Starred
 		 * 3 - Trashed

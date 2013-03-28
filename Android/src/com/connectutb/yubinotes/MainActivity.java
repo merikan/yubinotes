@@ -55,6 +55,7 @@ public class MainActivity extends ListActivity {
 		if (settings.getBoolean("autolock", true)==true){
     	editor.putString("crypt3", "0000000000000000");
     	editor.putString("crypt4", "0000000000000000");
+    	editor.putBoolean("isLocked", true);
     	editor.commit();
 		}
 		//Update lock status
