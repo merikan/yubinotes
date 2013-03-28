@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ListNotesActivity extends ListActivity{
 	
@@ -25,13 +26,15 @@ public class ListNotesActivity extends ListActivity{
 	private String TAG = "YubiNotes";
 	
 	public String folderId = "0";
+	public int mode = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
-		notes = db.listNotes("0");
+	    mode = getIntent().getIntExtra("mode", 0);
+		notes = db.listNotes("0",(int)mode);
 		
 		setListAdapter(new ListNotesListAdapter(this, notes));	
 	}
@@ -56,6 +59,9 @@ public class ListNotesActivity extends ListActivity{
     	case R.id.action_new:
     		showNewNoteDialog();
     		return true;
+    	//New Folder
+    	case R.id.action_new_folder:
+    		showNewFolderDialog();
 		//Delete note
     	case R.id.action_delete:
     		deleteSelectedNotes();
@@ -72,9 +78,15 @@ public class ListNotesActivity extends ListActivity{
 	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
 	    		if( cbox.isChecked() ) { 
 	    			String[] keywordArray = o.toString().split(";");
-	    			db.deleteNotes(keywordArray[0]);
-	    			Log.d(TAG, "DELETED: " + keywordArray[0]);
-	    	    	notes = db.listNotes(keywordArray[3]);
+	    			if (mode==3){
+	    				db.deleteNotes(keywordArray[0],false);
+	    				Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_SHORT).show();
+	    			}
+	    			else{
+	    				db.deleteNotes(keywordArray[0],true);
+	    				Toast.makeText(this, R.string.note_trashed, Toast.LENGTH_SHORT).show();
+	    			}
+	    	    	notes = db.listNotes(keywordArray[3],mode);
 	    		}
     	}
     	setListAdapter(new ListNotesListAdapter(this, notes));	
@@ -88,12 +100,35 @@ public class ListNotesActivity extends ListActivity{
     	String keyword = o.toString();
     	String[] keywordArray = keyword.split(";");
         //Is it a folder or a note?
-    	if (keywordArray[2].length() >= 1){
+    	if (keywordArray[2].length() <= 2){
+    		Log.d(TAG,o.toString());
     		//its a folder, show the list of notes in that folder
-    		folderId = keywordArray[3];
-    		notes = db.listNotes(folderId);
+    		folderId = keywordArray[0];
+    		notes = db.listNotes(folderId, mode);
     		setListAdapter(new ListNotesListAdapter(this, notes));	
     	}
+    }
+    
+    public void showNewFolderDialog(){
+    	int mStackLevel = 1;
+
+	    // DialogFragment.show() will take care of adding the fragment
+	    // in a transaction.  We also want to remove any currently showing
+	    // dialog, so make our own transaction and take care of that here.
+	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotefolderdialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+	    
+	    // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putString("folderId", folderId);
+	    // Create and show the dialog.
+	    DialogFragment newFragment = NewFolderDialog.newInstance(mStackLevel);
+	    newFragment.setArguments(args);
+	    newFragment.show(ft, "yubinotefolderdialog");
     }
     
     public void showNewNoteDialog(){
@@ -116,12 +151,11 @@ public class ListNotesActivity extends ListActivity{
 	    DialogFragment newFragment = NewNoteDialog.newInstance(mStackLevel);
 	    newFragment.setArguments(args);
 	    newFragment.show(ft, "yubinotedialog");
-	    Log.d(TAG, "READY?");
 	}
     
     public void onNoteCreation() {
         // Refresh note list
-		notes = db.listNotes(folderId);
+		notes = db.listNotes(folderId,mode);
 		setListAdapter(new ListNotesListAdapter(this, notes));	
     }
 }

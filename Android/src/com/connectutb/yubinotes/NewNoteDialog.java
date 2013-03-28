@@ -48,18 +48,22 @@ public class NewNoteDialog extends DialogFragment{
 	    View v = inflater.inflate(R.layout.new_note_dialog, null, false);
 	    builder.setView(v)
 	    // Add action buttons
-	           .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+	           .setPositiveButton(R.string.note_create, new DialogInterface.OnClickListener() {
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	                   // post comment
 	            	   noteTitle = noteTitleView.getText().toString();
 	            	   noteText = noteTextView.getText().toString();
+	            	   if (noteText.length() < 1){
+	            		   //add a space character so that crypto doesnt blow up
+	            		   noteText = " ";
+	            	   }
 	            	   createNote();
 	            	   ListNotesActivity callingActivity = (ListNotesActivity) getActivity();
 	                   callingActivity.onNoteCreation();
 	               }
 	           })
-	           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	           .setNegativeButton(R.string.note_cancel, new DialogInterface.OnClickListener() {
 	               public void onClick(DialogInterface dialog, int id) {
 	            	   NewNoteDialog.this.getDialog().cancel();
 	               }
@@ -73,6 +77,6 @@ public class NewNoteDialog extends DialogFragment{
 	public void createNote(){
 		//Database manager
 		DbManager db = new DbManager(this.getActivity());
-		db.addNote(noteTitle, noteText, folderId);
+		db.addNote(noteTitle, noteText, folderId, false);
 	}
 }

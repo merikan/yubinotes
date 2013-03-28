@@ -29,7 +29,10 @@ public class DbManager extends SQLiteOpenHelper{
 	private static final String NOTES_DIR = "dir";
 	private static final String NOTES_CREATED = "created_timestamp";
 	private static final String NOTES_MODIFIED = "modified_timestamp";
-	private static final String NOTES_VIEWED = "viewed_timestamp";	
+	private static final String NOTES_VIEWED = "viewed_timestamp";
+	private static final String NOTES_TRASH = "trashed";
+	private static final String NOTES_STARRED = "starred";
+	private static final String NOTES_TYPE = "type";
 
 	//Context
 	private Context context;
@@ -47,7 +50,8 @@ public class DbManager extends SQLiteOpenHelper{
 				+ NOTES_ID + " INTEGER PRIMARY KEY,"
 				+ NOTES_TITLE + " TEXT," + NOTES_TEXT + " TEXT," + NOTES_DIR + " TEXT,"
 				+ NOTES_CREATED + " TIMESTAMP," + NOTES_MODIFIED + " TIMESTAMP,"
-				+ NOTES_VIEWED + " TIMESTAMP)";
+				+ NOTES_VIEWED + " TIMESTAMP," + NOTES_TRASH + " INTEGER,"
+				+ NOTES_STARRED + " INTEGER," + NOTES_TYPE + " INTEGER)";
 		db.execSQL(CREATE_NOTES_TABLE);
 	}
 
@@ -76,12 +80,14 @@ public class DbManager extends SQLiteOpenHelper{
 				// TODO Auto-generated catch block
 				Log.d(TAG,"Crypto failed: " + e.getMessage());
 				e.printStackTrace();
+				//If encryption failed, return encrypted string (looks better)
+				result = str;
 			}
 		
 		return result;
 	}
 
-	public boolean addNote(String Title, String Text, String folderId){
+	public boolean addNote(String Title, String Text, String folderId, boolean isFolder){
 		SQLiteDatabase db = getWritableDatabase();
 		//Add a new note
 		//Grab current time
@@ -97,6 +103,13 @@ public class DbManager extends SQLiteOpenHelper{
 		values.put(NOTES_CREATED, current_time);
 		values.put(NOTES_MODIFIED, current_time);
 		values.put(NOTES_VIEWED, current_time);
+		values.put(NOTES_TRASH, 0);
+		values.put(NOTES_STARRED, 0);
+		if (isFolder){
+			values.put(NOTES_TYPE,0);
+		}else{
+			values.put(NOTES_TYPE,1);
+		}
 		
 		//Inserting the record
 		db.insert(TABLE_NOTES, null, values);
@@ -104,38 +117,55 @@ public class DbManager extends SQLiteOpenHelper{
 		return true;
 	}
 	
-	public void deleteNotes(String noteId){
-		//Delete item from favorites 
 
+	public void deleteNotes(String noteId, boolean trashMode){
+		//Delete note
 		SQLiteDatabase db = this.getWritableDatabase();
-
 		String sql = "DELETE FROM " + TABLE_NOTES + " WHERE " + NOTES_ID + "=" + noteId;
+		if (trashMode){
+			sql ="UPDATE " + TABLE_NOTES + " SET " + NOTES_TRASH + "=1 WHERE " + NOTES_ID +"=" + noteId;
+		}
 		db.execSQL(sql);
 	}
 	
-	public String[] listNotes(String dirId){
+	public String[] listNotes(String dirId, int mode){
+		/**
+		 * MODES
+		 * 0 - All Notes (except trashed
+		 * 1 - Recent
+		 * 2 - Starred
+		 * 3 - Trashed
+		 */
 		//Retrieve a string array with the history
-				ArrayList<String> temp_array = new ArrayList<String>();
-				String[] notes_array = new String[0];
-				//SQL 
-				String sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"'";
-				//Define database and cursor
-				SQLiteDatabase db = this.getWritableDatabase(); 
-				Cursor c = db.rawQuery(sqlQuery, null);
+		ArrayList<String> temp_array = new ArrayList<String>();
+		String[] notes_array = new String[0];
+		//SQL 
+		String sqlQuery = "";
+		if (mode==0){
+			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=0";
+		}else if (mode==2){
+			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_STARRED + "=1";	
+		}else if (mode==3){
+			Log.d(TAG, "Selecting trashed");
+			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=1";
+		}
+		//Define database and cursor
+		SQLiteDatabase db = this.getWritableDatabase(); 
+		Cursor c = db.rawQuery(sqlQuery, null);
 
-				//Loop through the results and add it to the temp_array
-				if (c.moveToFirst()){
-					do{
-						temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + cryptoString(c.getString(c.getColumnIndex(NOTES_TITLE)),true)+ ";" 
-								+ c.getString(c.getColumnIndex(NOTES_TEXT)) +  ";" + c.getString(c.getColumnIndex(NOTES_DIR))+ ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED))); 			
-					}while(c.moveToNext());
-				}
+		//Loop through the results and add it to the temp_array
+		if (c.moveToFirst()){
+			do{
+				temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + cryptoString(c.getString(c.getColumnIndex(NOTES_TITLE)),true)+ ";" 
+						+ c.getString(c.getColumnIndex(NOTES_TEXT)) +  ";" + c.getString(c.getColumnIndex(NOTES_DIR))+ ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED)) + ";" + c.getString(c.getColumnIndex(NOTES_TYPE))); 			
+			}while(c.moveToNext());
+		}
 
-				//Close cursor
-				c.close();
-				//Convert from arraylist to string array
-				notes_array = (String[]) temp_array.toArray(notes_array);
-				//Return the string array
-				return notes_array;
+		//Close cursor
+		c.close();
+		//Convert from arraylist to string array
+		notes_array = (String[]) temp_array.toArray(notes_array);
+		//Return the string array
+		return notes_array;
 	}
 }

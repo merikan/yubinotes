@@ -18,6 +18,6 @@
         android:id="@+id/action_delete"
         android:orderInCategory="102"
         android:showAsAction="ifRoom"
-        android:icon="@drawable/trash"
+        android:icon="@drawable/delete"
         android:title="@string/note_delete"/>
 </menu>

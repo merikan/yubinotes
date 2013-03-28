@@ -1,0 +1,8 @@
+<preference-headers
+        xmlns:android="http://schemas.android.com/apk/res/android">
+        
+    <header android:fragment="com.connectutb.yubinotes.Preferences$Prefs1Fragment"
+            android:title="@string/prefs_yubinotes"
+            android:summary="@string/prefs_summary" />
+
+</preference-headers>

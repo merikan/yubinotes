@@ -11,6 +11,7 @@
     <string name="action_new_folder">New Folder</string>
     <string name="keys_locked">Notes locked!</string>
     <string name="keys_unlocked">Notes unlocked!</string>
+    <string name="unlock_first">Unlock notes first!</string>
     
     <!--  Unlock Dialog -->
     <string name="action_lock">Lock</string>
@@ -19,7 +20,23 @@
     <string name="note_title_hint">Title</string>
     <string name="note_text_hint">Text</string>
     <string name="note_create">Create</string>
+    <string name="note_cancel">Cancel</string>
+    <string name="new_note">New Note</string>
+    
+    <!-- New Folder Dialog -->
+    <string name="new_folder">New Folder</string>
     
     <!--  Notes list  -->
     <string name="note_delete">Delete</string>
+    <string name="note_trashed">Note trashed</string>
+ 	<string name="note_deleted">Note deleted</string>
+ 	
+ 	<!-- Prefs -->
+ 	<string name="prefs_yubinotes">Preferences</string>
+ 	<string name="prefs_summary">YubiNote Preferences</string>
+ 	<string name="prefs_security">Security</string>
+ 	<string name="prefs_autolock">Auto lock</string>
+ 	<string name="prefs_autolock_summary">Automatically lock notes</string>
+ 	<string name="prefs_ignore_lock">Ignore lock</string>
+ 	<string name="prefs_ignore_lock_summary">Enable this if you want to see encrypted data when notes are locked</string>
 </resources>

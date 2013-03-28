@@ -54,11 +54,10 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		
 		String noteText = arrayString[2];
 		// Set appropriate icon 
-		
-		if (noteText.length()>=1){
+		int noteType = Integer.parseInt(arrayString[5]);
+		if (noteType==1){
 			holder.imageViewIcon.setImageResource(R.drawable.note);
-		}
-		else{
+		}else{
 			holder.imageViewIcon.setImageResource(R.drawable.collection);
 		}
 			

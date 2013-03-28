@@ -34,6 +34,11 @@
             android:name="com.connectutb.yubinotes.ListNotesActivity"
             android:label="@string/all_notes">
         </activity>
+        <activity
+            android:name=".Preferences"
+            android:theme="@android:style/Theme.Holo.Light"
+            android:label="@string/prefs_yubinotes">
+        </activity>
     </application>
 
 </manifest>

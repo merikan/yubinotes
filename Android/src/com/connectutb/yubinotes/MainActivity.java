@@ -1,6 +1,5 @@
 package com.connectutb.yubinotes;
 
-import java.math.BigInteger;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,10 +51,14 @@ public class MainActivity extends ListActivity {
 			generateUID();
 		}
 		
-    	//Wipe the keys from settings when we start the app
+    	//Wipe the keys from settings when we start the app if autolock is enabled
+		if (settings.getBoolean("autolock", true)==true){
     	editor.putString("crypt3", "0000000000000000");
     	editor.putString("crypt4", "0000000000000000");
     	editor.commit();
+		}
+		//Update lock status
+		isLocked = settings.getBoolean("isLocked", true);
 		
 		/* This code was retrieved from the YubiKey app, but doesnt seem to work */
 		if(extras != null && extras.containsKey("otp")) {
@@ -87,6 +90,11 @@ public class MainActivity extends ListActivity {
     		Intent i = new Intent(this, MainActivity.class);
         	startActivity(i);	 
     		return true;
+    	//Settings
+    	case R.id.action_settings:
+    		Intent settingsIntent = new Intent(this, Preferences.class);
+        	startActivity(settingsIntent);	 
+    		return true;
     	//New Note
     	case R.id.action_lock:
     		lockKeys();
@@ -109,9 +117,19 @@ public class MainActivity extends ListActivity {
     	// We retrieve the item that was clicked
     	Object o = this.getListAdapter().getItem(position);
     	String keyword = o.toString();
+    	Log.d(TAG,Long.toString(id));
         Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
-        i.putExtra("list", keyword);
-        startActivity(i);
+        i.putExtra("mode", (int)id);
+    	//If ignore lock is disabled, only proceed if notes are unlocked
+    	if (settings.getBoolean("ignore_lock", false)==true){
+    		startActivity(i);
+    	}else{
+    		if (isLocked){
+    			Toast.makeText(this, R.string.unlock_first, Toast.LENGTH_SHORT).show();
+    		}else{
+    			startActivity(i);
+    		}
+    	}
     }
     
     public void onPause() {
@@ -153,6 +171,7 @@ public class MainActivity extends ListActivity {
     	//Wipe the keys from settings
     	editor.putString("crypt3", "0000000000000000");
     	editor.putString("crypt4", "0000000000000000");
+    	editor.putBoolean("isLocked", true);
     	editor.commit();
     	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
     	isLocked = true;
@@ -174,6 +193,7 @@ public class MainActivity extends ListActivity {
     	
     	editor.putString("crypt3", iv);
     	editor.putString("crypt4", secret);
+    	editor.putBoolean("isLocked", false);
     	editor.commit();
     	isLocked = false;
     	invalidateOptionsMenu();
