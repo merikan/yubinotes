@@ -8,4 +8,12 @@
     <string name="all_notes">All Notes</string>
 
     <string name="action_new_note">Add</string>
+    
+    <!--  Unlock Dialog -->
+    <string name="action_lock">Lock</string>
+    
+    <!-- New Note Dialog -->
+    <string name="note_title_hint">Title</string>
+    <string name="note_text_hint">Text</string>
+    <string name="note_create">Create</string>
 </resources>

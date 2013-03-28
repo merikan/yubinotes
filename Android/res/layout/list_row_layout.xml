@@ -19,8 +19,8 @@
         android:id="@+id/textViewNoteDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewTitle"
-        android:layout_below="@+id/textViewTitle"
+        android:layout_alignLeft="@+id/textViewNoteTitle"
+        android:layout_below="@+id/textViewNoteTitle"
         android:layout_marginTop="5dp"
         android:textColor="#545454"
         android:textSize="13sp"
@@ -33,7 +33,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_alignParentLeft="true"
-         android:layout_alignBaseline="@+id/textViewTitle"
+         android:layout_alignBaseline="@+id/textViewNoteTitle"
          android:focusable="false"
          android:text="" />
 

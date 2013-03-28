@@ -1,6 +1,7 @@
 package com.connectutb.yubinotes;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		View rowView = convertView;
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.main_row_layout, null, true);
+			rowView = inflater.inflate(R.layout.list_row_layout, null, true);
 			holder = new ViewHolder();
 			holder.textViewTitle = (TextView) rowView.findViewById(R.id.textViewNoteTitle);
 			holder.textViewTimestamp = (TextView) rowView.findViewById(R.id.textViewNoteDate);
@@ -43,6 +44,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder = (ViewHolder) rowView.getTag();
 		}
 		
+		Log.d("YubiNotes",noteslist[position]);
 		String[] arrayString = noteslist[position].split(";");
 		holder.textViewTitle.setText(arrayString[1]);
 		holder.textViewTimestamp.setText(arrayString[3]);

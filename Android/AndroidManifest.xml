@@ -4,8 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
     
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	
+	<uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature android:name="android.hardware.nfc" android:required="true" />
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="17" />
@@ -23,9 +24,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+              <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+              <category android:name="android.intent.category.DEFAULT"/>
+              <data android:scheme="https" android:host="my.yubico.com"/>
+            </intent-filter>
         </activity>
         <activity
-            android:name="ListNotesActivity"
+            android:name="com.connectutb.yubinotes.ListNotesActivity"
             android:label="@string/all_notes">
         </activity>
     </application>

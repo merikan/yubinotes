@@ -1,4 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    	<item
+        android:id="@+id/action_lock"
+        android:orderInCategory="99"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_lock"/>
+    	
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

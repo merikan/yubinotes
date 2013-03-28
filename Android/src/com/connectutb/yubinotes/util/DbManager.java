@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.Time;
+import com.connectutb.yubinotes.util.Crypto;
 
 public class DbManager extends SQLiteOpenHelper{
 	
@@ -51,15 +52,24 @@ public class DbManager extends SQLiteOpenHelper{
 	}
 
 	public boolean addNote(String uTitle, String Title, String Text){
+		SQLiteDatabase db = getWritableDatabase();
 		//Add a new note
-		SQLiteDatabase db = this.getWritableDatabase();
 		//Grab current time
 		Time now = new Time();
 		now.setToNow();
-		String current_time = now.toString();
+		//Format it in a format SQLite will understand
+		String current_time = now.format("%Y-%m-%d %H:%M:%S");
+		
+		//Encrypt strings
+		Crypto crypt = new Crypto("a45848d53140b415","4841514b235f544e");
 		
 		ContentValues values = new ContentValues();
-		values.put(NOTES_PT_TITLE, uTitle);
+		try {
+			values.put(NOTES_PT_TITLE, Crypto.bytesToHex( crypt.encrypt(uTitle)));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		values.put(NOTES_TITLE, Title);
 		values.put(NOTES_TEXT, Text);
 		values.put(NOTES_CREATED, current_time);
@@ -86,8 +96,7 @@ public class DbManager extends SQLiteOpenHelper{
 				if (c.moveToFirst()){
 					do{
 						temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + c.getString(c.getColumnIndex(NOTES_PT_TITLE))+ ";" 
-								+ c.getString(c.getColumnIndex(NOTES_CREATED)) +  ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED))); 
-								
+								+ c.getString(c.getColumnIndex(NOTES_CREATED)) +  ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED))); 			
 					}while(c.moveToNext());
 				}
 
