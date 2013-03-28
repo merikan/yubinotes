@@ -18,6 +18,8 @@ public class NewNoteDialog extends DialogFragment{
 	String noteTitle;
 	String noteText;
 	
+	String folderId; 
+	
 	static NewNoteDialog newInstance(int num){
 		NewNoteDialog nnd = new NewNoteDialog();
 		
@@ -32,6 +34,7 @@ public class NewNoteDialog extends DialogFragment{
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        folderId = getArguments().getString("folderId");
 	}
 	
 	@Override
@@ -52,6 +55,8 @@ public class NewNoteDialog extends DialogFragment{
 	            	   noteTitle = noteTitleView.getText().toString();
 	            	   noteText = noteTextView.getText().toString();
 	            	   createNote();
+	            	   ListNotesActivity callingActivity = (ListNotesActivity) getActivity();
+	                   callingActivity.onNoteCreation();
 	               }
 	           })
 	           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -68,7 +73,6 @@ public class NewNoteDialog extends DialogFragment{
 	public void createNote(){
 		//Database manager
 		DbManager db = new DbManager(this.getActivity());
-		db.addNote(noteTitle, noteText, "0");
-		
+		db.addNote(noteTitle, noteText, folderId);
 	}
 }

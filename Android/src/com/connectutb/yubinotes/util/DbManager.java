@@ -104,6 +104,15 @@ public class DbManager extends SQLiteOpenHelper{
 		return true;
 	}
 	
+	public void deleteNotes(String noteId){
+		//Delete item from favorites 
+
+		SQLiteDatabase db = this.getWritableDatabase();
+
+		String sql = "DELETE FROM " + TABLE_NOTES + " WHERE " + NOTES_ID + "=" + noteId;
+		db.execSQL(sql);
+	}
+	
 	public String[] listNotes(String dirId){
 		//Retrieve a string array with the history
 				ArrayList<String> temp_array = new ArrayList<String>();
