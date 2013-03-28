@@ -6,4 +6,18 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/new_note"
         android:title="@string/action_new_note"/>
+    
+    <item
+        android:id="@+id/action_new_folder"
+        android:orderInCategory="101"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/new_folder"
+        android:title="@string/action_new_folder"/>
+    
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="102"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/trash"
+        android:title="@string/note_delete"/>
 </menu>

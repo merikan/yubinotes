@@ -68,7 +68,7 @@ public class NewNoteDialog extends DialogFragment{
 	public void createNote(){
 		//Database manager
 		DbManager db = new DbManager(this.getActivity());
-		db.addNote(noteTitle, noteTitle, noteText);
+		db.addNote(noteTitle, noteText, "0");
 		
 	}
 }

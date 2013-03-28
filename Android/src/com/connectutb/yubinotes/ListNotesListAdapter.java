@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListNotesListAdapter extends ArrayAdapter<String>{
@@ -21,6 +22,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 	static class ViewHolder{
 		public TextView textViewTitle;
 		public TextView textViewTimestamp;
+		public ImageView imageViewIcon;
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder = new ViewHolder();
 			holder.textViewTitle = (TextView) rowView.findViewById(R.id.textViewNoteTitle);
 			holder.textViewTimestamp = (TextView) rowView.findViewById(R.id.textViewNoteDate);
+			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewNoteIcon);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
@@ -47,8 +50,18 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		Log.d("YubiNotes",noteslist[position]);
 		String[] arrayString = noteslist[position].split(";");
 		holder.textViewTitle.setText(arrayString[1]);
-		holder.textViewTimestamp.setText(arrayString[3]);
-				
+		holder.textViewTimestamp.setText(arrayString[4]);
+		
+		String noteText = arrayString[2];
+		// Set appropriate icon 
+		
+		if (noteText.length()>=1){
+			holder.imageViewIcon.setImageResource(R.drawable.note);
+		}
+		else{
+			holder.imageViewIcon.setImageResource(R.drawable.collection);
+		}
+			
 		return rowView;
 	}
 }

@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-     <TextView
+    android:layout_height="match_parent"
+    android:paddingBottom="10dp" >
+
+    <ImageView
+        android:id="@+id/imageViewNoteIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/checkBoxNoteSelect"
+        android:src="@drawable/note" />
+
+    <TextView
         android:id="@+id/textViewNoteTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_alignTop="@+id/imageViewNoteIcon"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/imageViewNoteIcon"
+        android:text="My Note"
         android:textColor="#0f0f0f"
         android:textSize="17sp"
-        android:typeface="sans"
-        android:text="My Note" />
+        android:typeface="sans" />
 
     <TextView
         android:id="@+id/textViewNoteDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textViewNoteTitle"
         android:layout_below="@+id/textViewNoteTitle"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/imageViewNoteIcon"
+        android:text="Jul 12, 2013"
         android:textColor="#545454"
         android:textSize="13sp"
-        android:typeface="sans"
-        android:text="Jul 12, 2013" />
+        android:typeface="sans" />
 
-
-     <CheckBox
-         android:id="@+id/checkBoxNoteSelect"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
-         android:layout_alignBaseline="@+id/textViewNoteTitle"
-         android:focusable="false"
-         android:text="" />
+    <CheckBox
+        android:id="@+id/checkBoxNoteSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageViewNoteIcon"
+        android:layout_alignParentLeft="true"
+        android:focusable="false" />
 
 </RelativeLayout>

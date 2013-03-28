@@ -7,8 +7,8 @@
     
     <string name="all_notes">All Notes</string>
 
-    <string name="action_new_note">Add</string>
-    
+    <string name="action_new_note">New Note</string>
+    <string name="action_new_folder">New Folder</string>
     <string name="keys_locked">Notes locked!</string>
     <string name="keys_unlocked">Notes unlocked!</string>
     
@@ -19,4 +19,7 @@
     <string name="note_title_hint">Title</string>
     <string name="note_text_hint">Text</string>
     <string name="note_create">Create</string>
+    
+    <!--  Notes list  -->
+    <string name="note_delete">Delete</string>
 </resources>

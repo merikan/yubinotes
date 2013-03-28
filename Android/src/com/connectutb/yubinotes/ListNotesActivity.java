@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 
 public class ListNotesActivity extends ListActivity{
 	
@@ -24,7 +26,7 @@ public class ListNotesActivity extends ListActivity{
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
-		notes = db.listNotes();
+		notes = db.listNotes("0");
 		setListAdapter(new ListNotesListAdapter(this, notes));	
 	}
 
@@ -49,6 +51,21 @@ public class ListNotesActivity extends ListActivity{
     		showNewNoteDialog();
     	default:
     		return super.onOptionsItemSelected(item);
+    	}
+    }
+    
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id){
+    	super.onListItemClick(l, v, position, id);
+    	// We retrieve the item that was clicked
+    	Object o = this.getListAdapter().getItem(position);
+    	String keyword = o.toString();
+    	String[] keywordArray = keyword.split(";");
+        //Is it a folder or a note?
+    	if (keywordArray[2].length() >= 1){
+    		//its a folder, show the list of notes in that folder
+    		notes = db.listNotes(keywordArray[3]);
+    		setListAdapter(new ListNotesListAdapter(this, notes));	
     	}
     }
     
