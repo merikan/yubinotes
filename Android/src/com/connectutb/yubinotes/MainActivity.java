@@ -1,24 +1,37 @@
 package com.connectutb.yubinotes;
 
+import java.math.BigInteger;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends ListActivity {
+	
+	/* Our preferences */
+	public SharedPreferences settings;
+	public SharedPreferences.Editor editor;
 	
 	private String[] nav_items = new String[0];
 	private String otp = "NA";
 	private String TAG = "YubiNotes";
+	
+	private boolean isLocked = true;
 	
 	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
 	
@@ -30,11 +43,25 @@ public class MainActivity extends ListActivity {
 		
 		Bundle extras = getIntent().getExtras();
 		
+		/* Load our preferences */
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
+		editor = settings.edit();
+		
+		if (settings.getString("crypt1", "").length() < 3){
+			Log.d(TAG, "Generating security keys");
+			generateUID();
+		}
+		
+    	//Wipe the keys from settings when we start the app
+    	editor.putString("crypt3", "0000000000000000");
+    	editor.putString("crypt4", "0000000000000000");
+    	editor.commit();
+		
+		/* This code was retrieved from the YubiKey app, but doesnt seem to work */
 		if(extras != null && extras.containsKey("otp")) {
 			otp = extras.getString("otp");
 			Log.d(TAG, "received otp '" + otp + "' from extras.");
-		}
-		
+		}		
 	}
 
 	@Override
@@ -42,6 +69,38 @@ public class MainActivity extends ListActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu (Menu menu) {
+	    if (isLocked)
+	        menu.getItem(0).setEnabled(false);
+	    return true;
+	}
+	
+	/* Action on menu selection */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+    	switch(item.getItemId()){
+    	//Go home
+    	case android.R.id.home:
+    		Intent i = new Intent(this, MainActivity.class);
+        	startActivity(i);	 
+    		return true;
+    	//New Note
+    	case R.id.action_lock:
+    		lockKeys();
+    	default:
+    		return super.onOptionsItemSelected(item);
+    	}
+    }
+	
+	public void generateUID(){
+		String id = UUID.randomUUID().toString().replace("-", "");
+		
+		editor.putString("crypt1", id.substring(0,16));
+		editor.putString("crypt2", id.substring(14,30));
+		editor.commit();
 	}
     
     @Override
@@ -75,22 +134,76 @@ public class MainActivity extends ListActivity {
         
     	String data = getIntent().getDataString();
         if(data != null) {
-        	Matcher otpMatch = otpPattern.matcher(data);
-        	if(otpMatch.matches()) {
-        		otp = otpMatch.group(1);
-        		Log.d(TAG,"OTP: " + otp);
-        	} else {
-        		Log.i(TAG, "data from ndef didn't match, it was: " + data);
-        	}
+        	handleOTP(data);
         }
+    }
+    
+    public void handleOTP(String data){
+    	Matcher otpMatch = otpPattern.matcher(data);
+    	if(otpMatch.matches()) {
+    		otp = otpMatch.group(1);
+    		Log.d(TAG,"OTP: " + otp);
+    		unlockNotesYubiOffline();
+    	} else {
+    		Log.i(TAG, "data from ndef didn't match, it was: " + data);
+    	}
+    }
+    
+    public void lockKeys(){
+    	//Wipe the keys from settings
+    	editor.putString("crypt3", "0000000000000000");
+    	editor.putString("crypt4", "0000000000000000");
+    	editor.commit();
+    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
+    	isLocked = true;
+    	invalidateOptionsMenu();
+    }
+    public void unlockNotesYubiOffline(){
+    	/*
+    	 * Generates the IV and secret key using XOR
+    	 */
+    	
+    	String ivs = settings.getString("crypt1", "");
+    	String ivkey = otp.substring(0,16);
+    	String secrets = settings.getString("crypt2", "");
+    	
+    	//XOR the  IV
+    	String iv = xorTheKeys(ivs, ivkey);
+    	//XOR the Secret Key
+    	String secret = xorTheKeys(secrets, ivkey);
+    	
+    	editor.putString("crypt3", iv);
+    	editor.putString("crypt4", secret);
+    	editor.commit();
+    	isLocked = false;
+    	invalidateOptionsMenu();
+    	Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
+    }
+    
+    public String xorTheKeys(String s, String key ){
+    	
+    	byte[] bResult = xorWithKey(s.getBytes(), key.getBytes());
+    	String result = Base64.encodeToString(bResult, Base64.DEFAULT);
+    	
+    	Log.d(TAG, "Result: " + result.substring(0,16));
+    	
+    	return result.substring(0,16);
+    }
+    
+    private byte[] xorWithKey(byte[] a, byte[] key) {
+        byte[] out = new byte[a.length];
+        for (int i = 0; i < a.length; i++) {
+            out[i] = (byte) (a[i] ^ key[i%key.length]);
+        }
+        return out;
     }
 
     public void onNewIntent(Intent intent) {
     	// get the actual URI from the ndef tag
     	String data = intent.getDataString();
         Log.d(TAG, "data: " + data);
-       
-    }
-    
-    
+        if(data != null) {
+        	handleOTP(data);
+        }
+    }  
 }

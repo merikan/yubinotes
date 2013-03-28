@@ -9,6 +9,9 @@
 
     <string name="action_new_note">Add</string>
     
+    <string name="keys_locked">Notes locked!</string>
+    <string name="keys_unlocked">Notes unlocked!</string>
+    
     <!--  Unlock Dialog -->
     <string name="action_lock">Lock</string>
     

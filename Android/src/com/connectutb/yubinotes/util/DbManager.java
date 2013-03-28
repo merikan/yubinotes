@@ -4,13 +4,18 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
+
 import com.connectutb.yubinotes.util.Crypto;
 
 public class DbManager extends SQLiteOpenHelper{
+	private static final String TAG ="YubiNotes";
 	
 	/* Our database variables */
 	private static final String DATABASE_NAME = "YubiNotesDB";
@@ -24,8 +29,9 @@ public class DbManager extends SQLiteOpenHelper{
 	private static final String NOTES_TEXT = "text";
 	private static final String NOTES_CREATED = "created_timestamp";
 	private static final String NOTES_MODIFIED = "modified_timestamp";
-	private static final String NOTES_VIEWED = "viewed_timestamp";
-	
+	private static final String NOTES_VIEWED = "viewed_timestamp";	
+
+	//Context
 	private Context context;
 
 	//constructor
@@ -50,6 +56,30 @@ public class DbManager extends SQLiteOpenHelper{
 		// TODO Figure out how to implement database upgrades without dropping the tables
 		
 	}
+	
+	public String cryptoString(String str, boolean wantDecrypt){
+		//Get iv and key
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		String iv = settings.getString("crypt3", "");
+		String key = settings.getString("crypt4","");
+		Log.d(TAG,iv + " - " + key);
+		//Encrypt or decrypt strings
+		Crypto crypt = new Crypto(iv,key);
+		String result = "";
+			try {
+				if (wantDecrypt){
+					result = new String(crypt.decrypt(str));
+				}else{
+					result = Crypto.bytesToHex(crypt.encrypt(str));
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.d(TAG,"Crypto failed: " + e.getMessage());
+				e.printStackTrace();
+			}
+		
+		return result;
+	}
 
 	public boolean addNote(String uTitle, String Title, String Text){
 		SQLiteDatabase db = getWritableDatabase();
@@ -59,19 +89,11 @@ public class DbManager extends SQLiteOpenHelper{
 		now.setToNow();
 		//Format it in a format SQLite will understand
 		String current_time = now.format("%Y-%m-%d %H:%M:%S");
-		
-		//Encrypt strings
-		Crypto crypt = new Crypto("a45848d53140b415","4841514b235f544e");
-		
+
 		ContentValues values = new ContentValues();
-		try {
-			values.put(NOTES_PT_TITLE, Crypto.bytesToHex( crypt.encrypt(uTitle)));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		values.put(NOTES_TITLE, Title);
-		values.put(NOTES_TEXT, Text);
+		values.put(NOTES_PT_TITLE, cryptoString(uTitle,false));
+		values.put(NOTES_TITLE, cryptoString(Title,false));
+		values.put(NOTES_TEXT, cryptoString(Text,false));
 		values.put(NOTES_CREATED, current_time);
 		values.put(NOTES_MODIFIED, current_time);
 		values.put(NOTES_VIEWED, current_time);
@@ -95,7 +117,7 @@ public class DbManager extends SQLiteOpenHelper{
 				//Loop through the results and add it to the temp_array
 				if (c.moveToFirst()){
 					do{
-						temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + c.getString(c.getColumnIndex(NOTES_PT_TITLE))+ ";" 
+						temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + cryptoString(c.getString(c.getColumnIndex(NOTES_PT_TITLE)),true)+ ";" 
 								+ c.getString(c.getColumnIndex(NOTES_CREATED)) +  ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED))); 			
 					}while(c.moveToNext());
 				}
