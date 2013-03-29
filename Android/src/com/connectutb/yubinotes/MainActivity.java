@@ -67,7 +67,7 @@ public class MainActivity extends ListActivity {
 			Log.d(TAG, "received otp '" + otp + "' from extras.");
 		}		
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
