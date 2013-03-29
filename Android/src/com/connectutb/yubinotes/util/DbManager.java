@@ -160,7 +160,7 @@ public class DbManager extends SQLiteOpenHelper{
 		if (c.moveToFirst()){
 			do{
 				temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + cryptoString(c.getString(c.getColumnIndex(NOTES_TITLE)),true)+ ";" 
-						+ c.getString(c.getColumnIndex(NOTES_TEXT)) +  ";" + c.getString(c.getColumnIndex(NOTES_DIR))+ ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED)) + ";" + c.getString(c.getColumnIndex(NOTES_TYPE))); 			
+						+ cryptoString(c.getString(c.getColumnIndex(NOTES_TEXT)),true) +  ";" + c.getString(c.getColumnIndex(NOTES_DIR))+ ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED)) + ";" + c.getString(c.getColumnIndex(NOTES_TYPE))); 			
 			}while(c.moveToNext());
 		}
 

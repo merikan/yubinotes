@@ -99,13 +99,41 @@ public class ListNotesActivity extends ListActivity{
     	Object o = this.getListAdapter().getItem(position);
     	String keyword = o.toString();
     	String[] keywordArray = keyword.split(";");
+    	
+		folderId = keywordArray[0];
+		String selectedNoteTitle = keywordArray[1];
+		String selectedNoteText = keywordArray[2];
         //Is it a folder or a note?
     	if (keywordArray[2].length() <= 2){
     		Log.d(TAG,o.toString());
     		//its a folder, show the list of notes in that folder
-    		folderId = keywordArray[0];
+
     		notes = db.listNotes(folderId, mode);
     		setListAdapter(new ListNotesListAdapter(this, notes));	
+    	}else{
+    		//Show the note
+    		int mStackLevel = 1;
+
+    	    // DialogFragment.show() will take care of adding the fragment
+    	    // in a transaction.  We also want to remove any currently showing
+    	    // dialog, so make our own transaction and take care of that here.
+    	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotesviewdialog");
+    	    if (prev != null) {
+    	        ft.remove(prev);
+    	    }
+    	    ft.addToBackStack(null);
+    	    
+    	    // Supply num input as an argument.
+            Bundle args = new Bundle();
+            args.putString("folderId", folderId);
+            args.putString("title", selectedNoteTitle);
+            args.putString("text",selectedNoteText);
+            Log.d(TAG,selectedNoteTitle + " - " + selectedNoteText);
+    	    // Create and show the dialog.
+    	    DialogFragment newFragment = ViewNoteDialog.newInstance(mStackLevel);
+    	    newFragment.setArguments(args);
+    	    newFragment.show(ft, "yubinotesviewdialog");
     	}
     }
     

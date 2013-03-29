@@ -26,6 +26,8 @@
     <!-- New Folder Dialog -->
     <string name="new_folder">New Folder</string>
     
+    <!-- View Note Dialog -->
+    <string name="save_note">Save</string>
     <!--  Notes list  -->
     <string name="note_delete">Delete</string>
     <string name="note_trashed">Note trashed</string>
