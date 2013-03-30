@@ -14,4 +14,6 @@ passcode (offline)
 
 Todo
 ===
-Settings: Ignore locks (If you want to see encrypted data)
+* Setup Wizard
+* Widget
+
