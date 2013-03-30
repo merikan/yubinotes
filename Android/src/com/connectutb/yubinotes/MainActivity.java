@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -53,10 +56,10 @@ public class MainActivity extends ListActivity {
 		
     	//Wipe the keys from settings when we start the app if autolock is enabled
 		if (settings.getBoolean("autolock", true)==true){
-    	editor.putString("crypt3", "0000000000000000");
-    	editor.putString("crypt4", "0000000000000000");
-    	editor.putBoolean("isLocked", true);
-    	editor.commit();
+	    	editor.putString("crypt3", "0000000000000000");
+	    	editor.putString("crypt4", "0000000000000000");
+	    	editor.putBoolean("isLocked", true);
+	    	editor.commit();
 		}
 		//Update lock status
 		isLocked = settings.getBoolean("isLocked", true);
@@ -64,7 +67,6 @@ public class MainActivity extends ListActivity {
 		/* This code was retrieved from the YubiKey app, but doesnt seem to work */
 		if(extras != null && extras.containsKey("otp")) {
 			otp = extras.getString("otp");
-			Log.d(TAG, "received otp '" + otp + "' from extras.");
 		}		
 	}
 	
@@ -118,7 +120,6 @@ public class MainActivity extends ListActivity {
     	// We retrieve the item that was clicked
     	Object o = this.getListAdapter().getItem(position);
     	String keyword = o.toString();
-    	Log.d(TAG,Long.toString(id));
         Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
         i.putExtra("mode", (int)id);
     	//If ignore lock is disabled, only proceed if notes are unlocked
@@ -127,10 +128,34 @@ public class MainActivity extends ListActivity {
     	}else{
     		if (isLocked){
     			Toast.makeText(this, R.string.unlock_first, Toast.LENGTH_SHORT).show();
+    			
+    			//If we use password unlock, ask users for password here
+    			if (settings.getBoolean("use_yubi", true)==false){
+    				showPasswordDialog(false);
+    			}
     		}else{
     			startActivity(i);
     		}
     	}
+    }
+    
+    public void showPasswordDialog(boolean newPassword){
+    	int mStackLevel = 1;
+
+	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotepwdialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+	    
+	    // Supply num input as an argument.
+        Bundle args = new Bundle();
+	    // Create and show the dialog.
+        args.putBoolean("newPassword", newPassword);
+	    DialogFragment newFragment = PasswordDialog.newInstance(mStackLevel);
+	    newFragment.setArguments(args);
+	    newFragment.show(ft, "yubinotepwdialog");
     }
     
     public void onPause() {
@@ -162,7 +187,11 @@ public class MainActivity extends ListActivity {
     	if(otpMatch.matches()) {
     		otp = otpMatch.group(1);
     		Log.d(TAG,"OTP: " + otp);
-    		unlockNotesYubiOffline();
+    		if (settings.getBoolean("use_yubi", true)==true){
+    			unlockNotesYubiOffline();
+    		}else{
+    			Toast.makeText(this, R.string.yubi_disabled, Toast.LENGTH_SHORT).show();
+    		}
     	} else {
     		Log.i(TAG, "data from ndef didn't match, it was: " + data);
     	}
@@ -178,6 +207,7 @@ public class MainActivity extends ListActivity {
     	isLocked = true;
     	invalidateOptionsMenu();
     }
+    
     public void unlockNotesYubiOffline(){
     	/*
     	 * Generates the IV and secret key using XOR
@@ -199,6 +229,7 @@ public class MainActivity extends ListActivity {
     	isLocked = false;
     	invalidateOptionsMenu();
     	Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
+    	
     }
     
     public String xorTheKeys(String s, String key ){
@@ -218,11 +249,30 @@ public class MainActivity extends ListActivity {
         }
         return out;
     }
+    
+    public void checkPassword(String hash, boolean newPassword){
+    	//Save or check password
+    	if (newPassword){
+    		editor.putString("password", hash);
+    		editor.commit();
+    	} else{
+    		if (settings.getString("password", "0").equals(hash)){
+    			//Password hash matches, unlock notes
+    			editor.putString("crypt3", hash.substring(0,16));
+    	    	editor.putString("crypt4", hash.substring(4,20));
+    	    	editor.commit();
+    	    	isLocked = false;
+    	    	invalidateOptionsMenu();
+    			Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
+    		} else{
+    			Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
+    		}
+    	}
+    }
 
     public void onNewIntent(Intent intent) {
     	// get the actual URI from the ndef tag
     	String data = intent.getDataString();
-        Log.d(TAG, "data: " + data);
         if(data != null) {
         	handleOTP(data);
         }

@@ -22,6 +22,7 @@ public class ViewNoteDialog extends DialogFragment{
 	
 	String noteTitle;
 	String noteText;
+	int noteId; 
 	
 	String folderId; 
 	
@@ -42,6 +43,7 @@ public class ViewNoteDialog extends DialogFragment{
         folderId = getArguments().getString("folderId");
         noteTitle = getArguments().getString("title");
         noteText = getArguments().getString("text");
+        noteId = getArguments().getInt("noteId");
 	}
 	
 	@Override
@@ -65,7 +67,7 @@ public class ViewNoteDialog extends DialogFragment{
 	            		   //add a space character so that crypto doesnt blow up
 	            		   noteText = " ";
 	            	   }
-	            	   createNote();
+	            	   updateNote();
 	            	   ListNotesActivity callingActivity = (ListNotesActivity) getActivity();
 	                   callingActivity.onNoteCreation();
 	               }
@@ -75,7 +77,7 @@ public class ViewNoteDialog extends DialogFragment{
 	            	   ViewNoteDialog.this.getDialog().cancel();
 	               }
 	           });      
-
+	    
 	    noteTitleView = (TextView) v.findViewById(R.id.textViewViewNoteTitle);
 	    noteTextView = (EditText) v.findViewById(R.id.textViewViewNoteText);
 	    noteTitleView.setText(noteTitle);
@@ -83,10 +85,9 @@ public class ViewNoteDialog extends DialogFragment{
 	    return builder.create();
 	}
 
-	public void createNote(){
+	public void updateNote(){
 		//Database manager
 		DbManager db = new DbManager(this.getActivity());
-		db.addNote(noteTitle, noteText, folderId, false);
+		db.updateNote(noteTitle, noteText, noteId);
 	}
-
 }

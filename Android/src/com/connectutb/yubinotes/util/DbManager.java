@@ -117,6 +117,24 @@ public class DbManager extends SQLiteOpenHelper{
 		return true;
 	}
 	
+	public boolean updateNote(String title, String text, int noteId){
+		SQLiteDatabase db = getWritableDatabase();
+		//update note
+		String encTitle = cryptoString(title,false);
+		String encText = cryptoString(text, false);
+		//Grab current time
+		Time now = new Time();
+		now.setToNow();
+		//Format it in a format SQLite will understand
+		String current_time = now.format("%Y-%m-%d %H:%M:%S");
+
+		String sql = "UPDATE " + TABLE_NOTES + " SET " + NOTES_TITLE + "='" + encTitle + "', "
+		+ NOTES_TEXT + "='" + encText + "', " + NOTES_MODIFIED + "='" + current_time + "' WHERE " + NOTES_ID + "=" + noteId;
+		db.execSQL(sql);
+		db.close();
+		return true;
+	}
+	
 
 	public void deleteNotes(String noteId, boolean trashMode){
 		//Delete note or folders and notes associated with that folder
@@ -129,6 +147,7 @@ public class DbManager extends SQLiteOpenHelper{
 		}	
 		db.execSQL(sql);
 		db.execSQL(sql2);
+		db.close();
 	}
 	
 	public String[] listNotes(String dirId, int mode){

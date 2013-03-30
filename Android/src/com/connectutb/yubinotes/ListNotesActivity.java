@@ -8,7 +8,9 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +27,8 @@ public class ListNotesActivity extends ListActivity{
 	private String[] notes = new String[0];
 	private String TAG = "YubiNotes";
 	
+	public SharedPreferences settings;
+	
 	public String folderId = "0";
 	public int mode = 0;
 	
@@ -35,7 +39,7 @@ public class ListNotesActivity extends ListActivity{
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 	    mode = getIntent().getIntExtra("mode", 0);
 		notes = db.listNotes("0",(int)mode);
-		
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
 		setListAdapter(new ListNotesListAdapter(this, notes));	
 	}
 
@@ -52,8 +56,15 @@ public class ListNotesActivity extends ListActivity{
     	switch(item.getItemId()){
     	//Go home
     	case android.R.id.home:
+    		//Return to MainActivity if folderId = 0, else return to folderId = 0
+    		if (Integer.parseInt(folderId)==0){
     		Intent i = new Intent(this, MainActivity.class);
-        	startActivity(i);	 
+        	startActivity(i);
+    		}else{
+    			folderId = "0";
+    			notes = db.listNotes(folderId, mode);
+        		setListAdapter(new ListNotesListAdapter(this, notes));	
+    		}
     		return true;
     	//New Note
     	case R.id.action_new:
@@ -78,7 +89,7 @@ public class ListNotesActivity extends ListActivity{
 	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
 	    		if( cbox.isChecked() ) { 
 	    			String[] keywordArray = o.toString().split(";");
-	    			if (mode==3){
+	    			if (mode==3 || settings.getBoolean("use_trash", true) == false ){
 	    				db.deleteNotes(keywordArray[0],false);
 	    				Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_SHORT).show();
 	    			}
@@ -100,14 +111,15 @@ public class ListNotesActivity extends ListActivity{
     	String keyword = o.toString();
     	String[] keywordArray = keyword.split(";");
     	
-		folderId = keywordArray[0];
+		folderId = keywordArray[3];
 		String selectedNoteTitle = keywordArray[1];
 		String selectedNoteText = keywordArray[2];
+		int noteId = Integer.parseInt(keywordArray[0]);
         //Is it a folder or a note?
-    	if (keywordArray[2].length() <= 2){
-    		Log.d(TAG,o.toString());
+		Log.d(TAG, "TYPE: " + keywordArray[5]);
+    	if (Integer.parseInt(keywordArray[5]) == 0){
     		//its a folder, show the list of notes in that folder
-
+    		folderId = keywordArray[0];
     		notes = db.listNotes(folderId, mode);
     		setListAdapter(new ListNotesListAdapter(this, notes));	
     	}else{
@@ -129,7 +141,7 @@ public class ListNotesActivity extends ListActivity{
             args.putString("folderId", folderId);
             args.putString("title", selectedNoteTitle);
             args.putString("text",selectedNoteText);
-            Log.d(TAG,selectedNoteTitle + " - " + selectedNoteText);
+            args.putInt("noteId", noteId);
     	    // Create and show the dialog.
     	    DialogFragment newFragment = ViewNoteDialog.newInstance(mStackLevel);
     	    newFragment.setArguments(args);
@@ -184,6 +196,7 @@ public class ListNotesActivity extends ListActivity{
     public void onNoteCreation() {
         // Refresh note list
 		notes = db.listNotes(folderId,mode);
+		Log.d(TAG, "Showing notes with folderId " + folderId + " and mode " + mode);
 		setListAdapter(new ListNotesListAdapter(this, notes));	
     }
 }

@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory
+         android:title="@string/prefs_general">
+         
+          <CheckBoxPreference 
+            android:key="use_yubi"
+            android:title="@string/prefs_use_yubikey" 
+            android:summary="@string/prefs_use_yubikey_summary"
+            android:defaultValue="False" />
+          
+          <CheckBoxPreference 
+            android:key="use_trash"
+            android:title="@string/prefs_use_trash" 
+            android:summary="@string/prefs_use_trash"
+            android:defaultValue="True" />
+          
+        </PreferenceCategory>
+    <PreferenceCategory
         android:title="@string/prefs_security">
 
         <CheckBoxPreference
@@ -8,7 +24,7 @@
             android:title="@string/prefs_autolock"
             android:summary="@string/prefs_autolock_summary"
             android:defaultValue="True" />
-        
+       
         <CheckBoxPreference
             android:key="ignore_lock"
             android:title="@string/prefs_ignore_lock"

@@ -15,6 +15,12 @@
     
     <!--  Unlock Dialog -->
     <string name="action_lock">Lock</string>
+    <string name="yubi_disabled">Yubikey mode not enabled</string>
+    <!-- Password Dialog -->
+    <string name="enter_password">Enter Password</string>
+    <string name="password_hint">Password</string>
+    <string name="password_submit">Submit</string>
+    <string name="wrong_password">Incorrect Password</string>
     
     <!-- New Note Dialog -->
     <string name="note_title_hint">Title</string>
@@ -28,6 +34,7 @@
     
     <!-- View Note Dialog -->
     <string name="save_note">Save</string>
+    
     <!--  Notes list  -->
     <string name="note_delete">Delete</string>
     <string name="note_trashed">Note trashed</string>
@@ -36,9 +43,14 @@
  	<!-- Prefs -->
  	<string name="prefs_yubinotes">Preferences</string>
  	<string name="prefs_summary">YubiNote Preferences</string>
+ 	<string name="prefs_general">General</string>
  	<string name="prefs_security">Security</string>
  	<string name="prefs_autolock">Auto lock</string>
  	<string name="prefs_autolock_summary">Automatically lock notes</string>
+ 	<string name="prefs_use_yubikey">Use YubiKey</string>
+ 	<string name="prefs_use_yubikey_summary">Use your YubiKey NEO for locking/unlocking notes</string>
+ 	<string name="prefs_use_trash">Use Trash</string>
+ 	<string name="prefs_use_trash_summary">Deleted notes can be found in trash</string>
  	<string name="prefs_ignore_lock">Ignore lock</string>
  	<string name="prefs_ignore_lock_summary">Enable this if you want to see encrypted data when notes are locked</string>
 </resources>
