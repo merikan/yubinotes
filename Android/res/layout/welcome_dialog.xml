@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+	<TextView
+	    android:id="@+id/textViewWelcome"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_marginTop="5dp"
+	    android:layout_marginLeft="10dp"
+	    android:textColor="#7bab32"
+        android:textSize="23sp"
+	    android:text="@string/welcome_title" />
+
+	<TextView
+	    android:id="@+id/textViewWelcomeDescription"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewWelcome"
+	    android:layout_below="@+id/textViewWelcome"
+	    android:layout_marginTop="10dp"
+	    android:text="@string/welcome_description"
+	    android:textSize="19sp" />
+
+	<TextView
+	    android:id="@+id/textViewWelcomeHint"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewWelcomeDescription"
+	    android:layout_below="@+id/textViewWelcomeDescription"
+	    android:layout_marginTop="5dp"
+	    android:textColor="#5b5b5b"
+	    android:textSize="14sp"
+	    android:text="@string/welcome_hint" />
+
+	<TextView
+	    android:id="@+id/textViewYubiTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewWelcomeHint"
+	    android:layout_below="@+id/textViewWelcomeHint"
+	    android:layout_marginTop="16dp"
+	    android:textSize="16sp"
+	    android:text="@string/yubi_title" />
+
+	<TextView
+	    android:id="@+id/textViewYubiDescription"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewYubiTitle"
+	    android:layout_below="@+id/textViewYubiTitle"
+	    android:layout_marginTop="5dp"
+	    android:text="@string/yubi_description" />
+
+	<ImageView
+	    android:id="@+id/imageViewYubiMode"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignTop="@+id/textViewYubiTitle"
+	    android:layout_marginLeft="14dp"
+	    android:layout_toRightOf="@+id/textViewYubiTitle"
+	    android:src="@drawable/yubimode" />
+
+	<TextView
+	    android:id="@+id/textViewPasswordTitle"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewYubiDescription"
+	    android:layout_below="@+id/textViewYubiDescription"
+	    android:text="@string/password_title"
+	    android:layout_marginTop="10dp"
+	    android:textSize="16sp" />
+
+	<TextView
+	    android:id="@+id/textViewPasswordDescription"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/textViewPasswordTitle"
+	    android:layout_below="@+id/textViewPasswordTitle"
+	    android:layout_marginTop="5dp"
+	    android:layout_marginBottom="10dp"
+	    android:text="@string/password_description" />
+
+	<ImageView
+	    android:id="@+id/imageView1"
+	    android:layout_width="25dp"
+	    android:layout_height="25dp"
+	    android:layout_alignLeft="@+id/imageViewYubiMode"
+	    android:layout_alignTop="@+id/textViewPasswordTitle"
+	    android:src="@drawable/passwordmode" />
+
+</RelativeLayout>

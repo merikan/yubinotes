@@ -61,13 +61,21 @@ public class MainActivity extends ListActivity {
 	    	editor.putBoolean("isLocked", true);
 	    	editor.commit();
 		}
+		
 		//Update lock status
 		isLocked = settings.getBoolean("isLocked", true);
 		
-		/* This code was retrieved from the YubiKey app, but doesnt seem to work */
+		/* This code was retrieved from the YubiKey app, but it doesnt seem the YubiKey works that way anymore */
 		if(extras != null && extras.containsKey("otp")) {
 			otp = extras.getString("otp");
-		}		
+		}
+		
+		if (settings.getBoolean("firstRun", true)==true){
+			// Show the setup dialog
+			showWelcomeDialog();
+			editor.putBoolean("firstRun", false);
+			editor.commit();
+		}
 	}
 	
 	@Override
@@ -149,13 +157,41 @@ public class MainActivity extends ListActivity {
 	    }
 	    ft.addToBackStack(null);
 	    
-	    // Supply num input as an argument.
         Bundle args = new Bundle();
 	    // Create and show the dialog.
         args.putBoolean("newPassword", newPassword);
 	    DialogFragment newFragment = PasswordDialog.newInstance(mStackLevel);
 	    newFragment.setArguments(args);
 	    newFragment.show(ft, "yubinotepwdialog");
+    }
+    
+    public void showWelcomeDialog(){
+    	int mStackLevel = 1;
+
+	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotewelcomedialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+	    
+        Bundle args = new Bundle();
+	    // Create and show the dialog.
+	    DialogFragment newFragment = WelcomeDialog.newInstance(mStackLevel);
+	    newFragment.setArguments(args);
+	    newFragment.show(ft, "yubinotewelcomedialog");
+    }
+    
+    public void onModeSelection(boolean yubiMode){
+    	//If we selected yubikey mode, set that in the settings
+    	if (yubiMode){
+    		editor.putBoolean("use_yubi", true);
+    		Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT);
+    	}else{
+    		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT);
+    		editor.putBoolean("use_yubi", false);
+    	}
+    	editor.commit();
     }
     
     public void onPause() {

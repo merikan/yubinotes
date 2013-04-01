@@ -16,6 +16,19 @@
     <!--  Unlock Dialog -->
     <string name="action_lock">Lock</string>
     <string name="yubi_disabled">Yubikey mode not enabled</string>
+    
+    <!--  Welcome Dialog -->
+    <string name="welcome_title">Welcome to YubiNotes!</string>
+    <string name="welcome_description">Please pick a mode</string>
+    <string name="welcome_hint">You can change modes later, but you\'ll loose your notes if you do</string>
+    <string name="use_yubi">YubiKey Mode</string>
+    <string name="use_password">Password Mode</string>
+    <string name="yubi_title">YubiKey Mode</string>
+    <string name="yubi_description">With a YubiKey NEO and an NFC capable device, you can quickly unlock your notes by simply tapping the device with your YubiKey.</string>
+    <string name="password_title">Password Mode</string>
+    <string name="password_description">You will be able to unlock your notes by supplying your user set password.</string>
+    <string name="yubi_confirmation">To begin, scan your YubiKey using NFC</string>
+    <string name="password_confirmation">You will be asked to set your password when you start creating notes</string>
     <!-- Password Dialog -->
     <string name="enter_password">Enter Password</string>
     <string name="password_hint">Password</string>
