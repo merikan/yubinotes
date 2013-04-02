@@ -137,7 +137,11 @@ public class MainActivity extends ListActivity {
     			
     			//If we use password unlock, ask users for password here
     			if (settings.getBoolean("use_yubi", true)==false){
-    				showPasswordDialog(false);
+    				if (settings.getBoolean("password_set",false)==false){
+    					showPasswordDialog(true);
+    				}else {
+    					showPasswordDialog(false);
+    				}
     			}
     		}else{
     			startActivity(i);
@@ -196,7 +200,12 @@ public class MainActivity extends ListActivity {
     public void onPause() {
         super.onPause();
         // disable foreground dispatch when we're paused
+        try{
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
+        }catch (NullPointerException e){
+        	//No NFC present
+    		Log.d(TAG, "No NFC Present, moving on");
+        }
     }
 
     public void onResume() {
@@ -205,6 +214,8 @@ public class MainActivity extends ListActivity {
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
     	// lock keys (I think its a good idea)
+    	/* Load our preferences */
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
     	if (settings.getBoolean("autolock", true) == true){
     		lockKeys();
     	}
@@ -212,6 +223,7 @@ public class MainActivity extends ListActivity {
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
     	ndef.addDataScheme("https");
+    	try{
     	// register for foreground dispatch so we'll receive tags according to our intent filters
     	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
     			this, pendingIntent, new IntentFilter[] {ndef}, null);
@@ -220,6 +232,10 @@ public class MainActivity extends ListActivity {
         if(data != null) {
         	handleOTP(data);
         }
+    	} catch (NullPointerException e){
+    		//No NFC present
+    		Log.d(TAG, "No NFC Present, moving on");
+    	}
     }
     
     public void handleOTP(String data){
@@ -294,7 +310,11 @@ public class MainActivity extends ListActivity {
     	//Save or check password
     	if (newPassword){
     		editor.putString("password", hash);
+    		editor.putBoolean("password_set",true);
     		editor.commit();
+    		isLocked = false;
+	    	invalidateOptionsMenu();
+			Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
     	} else{
     		if (settings.getString("password", "0").equals(hash)){
     			//Password hash matches, unlock notes

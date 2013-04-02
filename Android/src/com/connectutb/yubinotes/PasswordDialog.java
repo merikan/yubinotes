@@ -57,7 +57,6 @@ public class PasswordDialog extends DialogFragment{
 	            	   
 	            	   try {
 						passwordstr = Base64.encodeToString(getHash(passwordstr), Base64.DEFAULT);
-						Log.d("YubiNotes","hashed password: " + passwordstr);
 					} catch (NoSuchAlgorithmException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
