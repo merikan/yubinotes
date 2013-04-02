@@ -22,5 +22,8 @@ passcode (offline)
 
 Todo
 ===
+* OnResume polish
+* Sharing Features
+* Bug Fixes
 * Widget
 
