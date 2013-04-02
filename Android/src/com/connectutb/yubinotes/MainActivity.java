@@ -73,8 +73,6 @@ public class MainActivity extends ListActivity {
 		if (settings.getBoolean("firstRun", true)==true){
 			// Show the setup dialog
 			showWelcomeDialog();
-			editor.putBoolean("firstRun", false);
-			editor.commit();
 		}
 	}
 	
@@ -191,6 +189,7 @@ public class MainActivity extends ListActivity {
     		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT).show();
     		editor.putBoolean("use_yubi", false);
     	}
+		editor.putBoolean("firstRun", false);
     	editor.commit();
     }
     
