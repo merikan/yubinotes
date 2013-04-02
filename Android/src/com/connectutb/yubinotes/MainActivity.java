@@ -186,9 +186,9 @@ public class MainActivity extends ListActivity {
     	//If we selected yubikey mode, set that in the settings
     	if (yubiMode){
     		editor.putBoolean("use_yubi", true);
-    		Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT);
+    		Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT).show();
     	}else{
-    		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT);
+    		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT).show();
     		editor.putBoolean("use_yubi", false);
     	}
     	editor.commit();
