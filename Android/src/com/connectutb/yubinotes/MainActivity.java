@@ -201,9 +201,14 @@ public class MainActivity extends ListActivity {
     }
 
     public void onResume() {
+    	
         super.onResume();
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+    	// lock keys (I think its a good idea)
+    	if (settings.getBoolean("autolock", true) == true){
+    		lockKeys();
+    	}
     	// register for all NDEF tags starting with http och https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
