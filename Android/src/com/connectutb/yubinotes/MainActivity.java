@@ -113,10 +113,10 @@ public class MainActivity extends ListActivity {
     }
 	
 	public void generateUID(){
-		String id = UUID.randomUUID().toString().replace("-", "");
-		
-		editor.putString("crypt1", id.substring(0,16));
-		editor.putString("crypt2", id.substring(14,30));
+		String id1 = UUID.randomUUID().toString().replace("-", "");
+		String id2 = UUID.randomUUID().toString().replace("-","");
+		editor.putString("crypt1", id1.substring(0,16));
+		editor.putString("crypt2", id2.substring(14,30));
 		editor.commit();
 	}
     
@@ -188,7 +188,12 @@ public class MainActivity extends ListActivity {
     	//If we selected yubikey mode, set that in the settings
     	if (yubiMode){
     		editor.putBoolean("use_yubi", true);
+    		if(settings.getBoolean("nfc_present", false)==true){
     		Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT).show();
+    		}else{
+    			//NFC not present..
+    			Toast.makeText(this,R.string.yubi_no_nfc, Toast.LENGTH_LONG).show();
+    		}
     	}else{
     		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT).show();
     		editor.putBoolean("use_yubi", false);
@@ -202,9 +207,11 @@ public class MainActivity extends ListActivity {
         // disable foreground dispatch when we're paused
         try{
         NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
+        editor.putBoolean("nfc_present", true);
         }catch (NullPointerException e){
         	//No NFC present
     		Log.d(TAG, "No NFC Present, moving on");
+    		editor.putBoolean("nfc_present", false);
         }
     }
 
@@ -229,12 +236,14 @@ public class MainActivity extends ListActivity {
     			this, pendingIntent, new IntentFilter[] {ndef}, null);
         
     	String data = getIntent().getDataString();
+    	editor.putBoolean("nfc_present", true);
         if(data != null) {
         	handleOTP(data);
         }
     	} catch (NullPointerException e){
     		//No NFC present
     		Log.d(TAG, "No NFC Present, moving on");
+    		editor.putBoolean("nfc_present", false);
     	}
     }
     
@@ -325,7 +334,6 @@ public class MainActivity extends ListActivity {
     		} else{
     			Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
     		}
-    	
     }
 
     public void onNewIntent(Intent intent) {
