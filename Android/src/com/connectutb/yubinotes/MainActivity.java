@@ -316,7 +316,8 @@ public class MainActivity extends ListActivity {
     }
     
     public void checkPassword(String hash, boolean newPassword){
-    	
+    	String iv = settings.getString("crypt1", "");
+    	String secret = settings.getString("crypt2", "");
     	//Save or check password
     	if (newPassword){
     		editor.putString("password", hash);
@@ -325,8 +326,8 @@ public class MainActivity extends ListActivity {
     	}
     	if (settings.getString("password", "0").equals(hash)){
     			//Password hash matches, unlock notes
-    			editor.putString("crypt3", hash.substring(0,16));
-    	    	editor.putString("crypt4", hash.substring(4,20));
+    			editor.putString("crypt3", xorTheKeys(hash.substring(0,16), iv));
+    	    	editor.putString("crypt4", xorTheKeys(hash.substring(4,20),secret));
     	    	editor.commit();
     	    	isLocked = false;
     	    	invalidateOptionsMenu();
