@@ -307,16 +307,14 @@ public class MainActivity extends ListActivity {
     }
     
     public void checkPassword(String hash, boolean newPassword){
+    	
     	//Save or check password
     	if (newPassword){
     		editor.putString("password", hash);
     		editor.putBoolean("password_set",true);
     		editor.commit();
-    		isLocked = false;
-	    	invalidateOptionsMenu();
-			Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
-    	} else{
-    		if (settings.getString("password", "0").equals(hash)){
+    	}
+    	if (settings.getString("password", "0").equals(hash)){
     			//Password hash matches, unlock notes
     			editor.putString("crypt3", hash.substring(0,16));
     	    	editor.putString("crypt4", hash.substring(4,20));
@@ -327,7 +325,7 @@ public class MainActivity extends ListActivity {
     		} else{
     			Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
     		}
-    	}
+    	
     }
 
     public void onNewIntent(Intent intent) {

@@ -165,6 +165,8 @@ public class DbManager extends SQLiteOpenHelper{
 		String sqlQuery = "";
 		if (mode==0){
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=0";
+		}else if (mode==1){
+			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=0 ORDER BY " + NOTES_MODIFIED + " DESC";
 		}else if (mode==2){
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_STARRED + "=1";	
 		}else if (mode==3){
