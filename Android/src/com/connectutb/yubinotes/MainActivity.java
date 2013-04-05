@@ -116,7 +116,7 @@ public class MainActivity extends ListActivity {
 		String id1 = UUID.randomUUID().toString().replace("-", "");
 		String id2 = UUID.randomUUID().toString().replace("-","");
 		editor.putString("crypt1", id1.substring(0,16));
-		editor.putString("crypt2", id2.substring(14,30));
+		editor.putString("crypt2", id2.substring(0,16));
 		editor.commit();
 	}
     

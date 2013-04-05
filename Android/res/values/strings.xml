@@ -28,7 +28,7 @@
     <string name="password_title">Password Mode</string>
     <string name="password_description">You will be able to unlock your notes by supplying your user set password.</string>
     <string name="yubi_confirmation">To begin, scan your YubiKey using NFC</string>
-    <string name="yubi_no_nfc">No NFC capabilities detect. Please make sure you have NFC enabled. If not, you can disable YubiKey mode in app preferences</string>
+    <string name="yubi_no_nfc">No NFC capabilities detected. Please make sure you have NFC enabled. If not, you can disable YubiKey mode in app preferences</string>
     <string name="password_confirmation">You will be asked to set your password when you start creating notes</string>
     <!-- Password Dialog -->
     <string name="enter_password">Enter Password</string>
