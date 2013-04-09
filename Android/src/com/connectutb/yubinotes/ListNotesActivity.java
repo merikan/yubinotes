@@ -103,6 +103,10 @@ public class ListNotesActivity extends ListActivity{
     	setListAdapter(new ListNotesListAdapter(this, notes));	
     }
     
+    private void favoriteSelectedNotes(){
+    	
+    }
+    
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
