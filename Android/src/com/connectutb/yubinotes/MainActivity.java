@@ -215,7 +215,8 @@ public class MainActivity extends ListActivity {
     		editor.putBoolean("nfc_present", false);
         }
     }
-
+    
+    @Override
     public void onResume() {
     	
         super.onResume();

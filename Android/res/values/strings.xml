@@ -55,6 +55,7 @@
     <string name="note_delete">Delete</string>
     <string name="note_trashed">Note trashed</string>
  	<string name="note_deleted">Note deleted</string>
+ 	<string name="action_favorite">Favorite</string>
  	
  	<!-- Prefs -->
  	<string name="prefs_yubinotes">Preferences</string>
