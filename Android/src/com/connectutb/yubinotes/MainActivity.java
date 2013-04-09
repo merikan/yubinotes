@@ -128,9 +128,10 @@ public class MainActivity extends ListActivity {
     	String keyword = o.toString();
         Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
         i.putExtra("mode", (int)id);
+        int resultCode = 0;
     	//If ignore lock is disabled, only proceed if notes are unlocked
     	if (settings.getBoolean("ignore_lock", false)==true){
-    		startActivity(i);
+    		startActivityForResult(i, resultCode);
     	}else{
     		if (isLocked){
     			Toast.makeText(this, R.string.unlock_first, Toast.LENGTH_SHORT).show();
@@ -144,7 +145,7 @@ public class MainActivity extends ListActivity {
     				}
     			}
     		}else{
-    			startActivity(i);
+    			startActivityForResult(i, resultCode);
     		}
     	}
     }

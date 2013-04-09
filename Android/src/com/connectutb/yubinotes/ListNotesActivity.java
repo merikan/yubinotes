@@ -199,4 +199,15 @@ public class ListNotesActivity extends ListActivity{
 		Log.d(TAG, "Showing notes with folderId " + folderId + " and mode " + mode);
 		setListAdapter(new ListNotesListAdapter(this, notes));	
     }
+    
+    @Override
+    protected void onStop() {
+        setResult(2);
+        super.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        setResult(2);
+        super.onDestroy();
+    }
 }
