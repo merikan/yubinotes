@@ -6,12 +6,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 public class NewNoteDialog extends DialogFragment{
 		
+	TextView newNoteLabel;
 	EditText noteTitleView;
 	EditText noteTextView;
 	
@@ -69,8 +72,14 @@ public class NewNoteDialog extends DialogFragment{
 	               }
 	           });      
 
+	    Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
+	    
 	    noteTitleView = (EditText) v.findViewById(R.id.textViewNewNoteTitle);
 	    noteTextView = (EditText) v.findViewById(R.id.textViewNewNoteText);
+	    newNoteLabel = (TextView) v.findViewById(R.id.textViewLabel);
+	    newNoteLabel.setTypeface(tf);
+	    noteTitleView.setTypeface(tf);
+	    noteTextView.setTypeface(tf);
 	    return builder.create();
 	}
 

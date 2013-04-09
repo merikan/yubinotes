@@ -1,6 +1,7 @@
 package com.connectutb.yubinotes;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,9 @@ public class MainListAdapter extends ArrayAdapter<String>{
 		else if(id==3){
 			holder.imageViewIcon.setImageResource(R.drawable.trash);
 		}
+		
+		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
+		holder.textViewTitle.setTypeface(tf);
 		return rowView;
 	}
 }

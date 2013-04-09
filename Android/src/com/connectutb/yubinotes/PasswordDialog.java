@@ -8,17 +8,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class PasswordDialog extends DialogFragment{
 	
 	EditText passwordView;
 	String passwordstr;
+	TextView passwordTitle;
+	EditText passwordText;
 	boolean newPassword = false;
 	
 	static PasswordDialog newInstance(int num){
@@ -35,6 +39,7 @@ public class PasswordDialog extends DialogFragment{
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
         newPassword = getArguments().getBoolean("newPassword");
 	}
 	
@@ -47,9 +52,20 @@ public class PasswordDialog extends DialogFragment{
 	    // Inflate and set the layout for the dialog
 	    // Pass null as the parent view because its going in the dialog layout
 	    View v = inflater.inflate(R.layout.password_dialog, null, false);
+	    
+	    passwordTitle = (TextView) v.findViewById(R.id.textViewPasswordLabel);
+	    passwordText = (EditText) v.findViewById(R.id.editTextPassword);
+	    if (newPassword){
+	    	passwordTitle.setText(getActivity().getString(R.string.set_password));
+	    }
+	    Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
+	    passwordTitle.setTypeface(tf);
+	    passwordText.setTypeface(tf);
+	    
 	    builder.setView(v)
 	    // Add action buttons
 	           .setPositiveButton(R.string.password_submit, new DialogInterface.OnClickListener() {
+	        	   
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	                   // Hash input password
@@ -75,7 +91,6 @@ public class PasswordDialog extends DialogFragment{
 	               }
 	           });      
 
-	    passwordView = (EditText) v.findViewById(R.id.editTextPassword);
 	    return builder.create();
 	}
 	

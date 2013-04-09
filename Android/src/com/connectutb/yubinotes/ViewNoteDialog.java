@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,6 +83,9 @@ public class ViewNoteDialog extends DialogFragment{
 	    noteTextView = (EditText) v.findViewById(R.id.textViewViewNoteText);
 	    noteTitleView.setText(noteTitle);
 	    noteTextView.setText(noteText);
+	    Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
+	    noteTitleView.setTypeface(tf);
+	    noteTextView.setTypeface(tf);
 	    return builder.create();
 	}
 
