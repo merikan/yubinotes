@@ -53,6 +53,7 @@ public class DbManager extends SQLiteOpenHelper{
 				+ NOTES_VIEWED + " TIMESTAMP," + NOTES_TRASH + " INTEGER,"
 				+ NOTES_STARRED + " INTEGER," + NOTES_TYPE + " INTEGER)";
 		db.execSQL(CREATE_NOTES_TABLE);
+		db.close();
 	}
 
 	@Override
@@ -215,9 +216,9 @@ public class DbManager extends SQLiteOpenHelper{
 			}while(c.moveToNext());
 		}
 
-		//Close cursor
+		//Close cursor and database
 		c.close();
-		
+		db.close();
 		//Convert from arraylist to string array
 		notesArray = (String[][]) notesList.toArray(notesArray);
 		
