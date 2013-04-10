@@ -55,6 +55,7 @@
         android:gravity="left"
         android:background="#7bab32"
         android:textSize="12sp"
+        android:focusable="false" 
         android:layout_alignParentRight="true"
         android:layout_marginRight="25dp"
         android:onClick="unFavoriteNote"
