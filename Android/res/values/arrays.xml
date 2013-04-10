@@ -3,7 +3,7 @@
     <string-array name="nav_items">
         <item>0;All Notes</item>
         <item>1;Recent</item>
-        <item>2;Starred</item>
+        <item>2;Favorites</item>
         <item>3;Trash</item>
     </string-array>
     

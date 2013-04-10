@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 public class PasswordDialog extends DialogFragment{
 	
-	EditText passwordView;
 	String passwordstr;
 	TextView passwordTitle;
 	EditText passwordText;
@@ -69,7 +68,7 @@ public class PasswordDialog extends DialogFragment{
 	               @Override
 	               public void onClick(DialogInterface dialog, int id) {
 	                   // Hash input password
-	            	   passwordstr = passwordView.getText().toString();
+	            	   passwordstr = passwordText.getText().toString();
 	            	   
 	            	   try {
 						passwordstr = Base64.encodeToString(getHash(passwordstr), Base64.DEFAULT);

@@ -45,4 +45,19 @@
         android:layout_alignParentLeft="true"
         android:focusable="false" />
 
+    <Button
+        android:id="@+id/buttonNoteFav"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        style="@android:style/Widget.Holo.Button.Borderless"
+        android:layout_alignBaseline="@+id/checkBoxNoteSelect"
+        android:layout_alignBottom="@+id/checkBoxNoteSelect"
+        android:gravity="left"
+        android:background="#7bab32"
+        android:textSize="12sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:onClick="unFavoriteNote"
+        android:text="@string/note_fav" />
+   
 </RelativeLayout>

@@ -143,14 +143,27 @@ public class DbManager extends SQLiteOpenHelper{
 		String sql2 = "DELETE FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + "=" + noteId;
 		if (trashMode){
 			sql ="UPDATE " + TABLE_NOTES + " SET " + NOTES_TRASH + "=1 WHERE " + NOTES_ID +"=" + noteId;
-			sql2 = "UPDATE " + TABLE_NOTES + " SET " + NOTES_TRASH + "=1 WHERE " + NOTES_DIR +"=" + noteId;
+			sql2 = "UPDATE " + TABLE_NOTES + " SET " + NOTES_STARRED + "=1 WHERE " + NOTES_DIR +"=" + noteId;
 		}	
 		db.execSQL(sql);
 		db.execSQL(sql2);
 		db.close();
 	}
 	
-	public String[] listNotes(String dirId, int mode){
+	public void setFavoriteNotes(String noteId, boolean setFav){
+		//We like to pick favorites.
+		SQLiteDatabase db = this.getWritableDatabase();
+		String sql;
+		if (setFav){
+			sql ="UPDATE " + TABLE_NOTES + " SET " + NOTES_STARRED + "=1 WHERE " + NOTES_ID +"=" + noteId;
+		}else{
+			sql ="UPDATE " + TABLE_NOTES + " SET " + NOTES_STARRED + "=0 WHERE " + NOTES_ID +"=" + noteId;
+		}
+		db.execSQL(sql);
+		db.close();
+	}
+	
+	public String[][] listNotes(String dirId, int mode){
 		/**
 		 * MODES
 		 * 0 - All Notes (except trashed)
@@ -159,8 +172,10 @@ public class DbManager extends SQLiteOpenHelper{
 		 * 3 - Trashed
 		 */
 		//Retrieve a string array with the history
-		ArrayList<String> temp_array = new ArrayList<String>();
-		String[] notes_array = new String[0];
+		
+		ArrayList<String[]> notesList = new ArrayList<String[]>();
+		String[][] notesArray = new String[0][10];
+		
 		//SQL 
 		String sqlQuery = "";
 		if (mode==0){
@@ -169,6 +184,7 @@ public class DbManager extends SQLiteOpenHelper{
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=0 ORDER BY " + NOTES_MODIFIED + " DESC";
 		}else if (mode==2){
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_STARRED + "=1";	
+			Log.d(TAG, "Listing favorite notes");
 		}else if (mode==3){
 			Log.d(TAG, "Selecting trashed");
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=1";
@@ -180,16 +196,32 @@ public class DbManager extends SQLiteOpenHelper{
 		//Loop through the results and add it to the temp_array
 		if (c.moveToFirst()){
 			do{
-				temp_array.add(c.getString(c.getColumnIndex(NOTES_ID)) + ";" + cryptoString(c.getString(c.getColumnIndex(NOTES_TITLE)),true)+ ";" 
-						+ cryptoString(c.getString(c.getColumnIndex(NOTES_TEXT)),true) +  ";" + c.getString(c.getColumnIndex(NOTES_DIR))+ ";" + c.getString(c.getColumnIndex(NOTES_MODIFIED)) + ";" + c.getString(c.getColumnIndex(NOTES_TYPE))); 			
+				
+				ArrayList<String> noteList = new ArrayList<String>();
+				 String[] noteArray = new String[8];
+				 String extStr;
+				 for (int i = 0; i < c.getColumnCount(); i++){
+					 if (i == 1 || i == 2){
+						 extStr = cryptoString(c.getString(i), true);
+					 }else{
+						 extStr = c.getString(i);
+						
+					 }
+					 noteList.add(extStr);
+				 }
+				 notesList.add((String[]) noteList.toArray(noteArray));
+				
+			
 			}while(c.moveToNext());
 		}
 
 		//Close cursor
 		c.close();
+		
 		//Convert from arraylist to string array
-		notes_array = (String[]) temp_array.toArray(notes_array);
+		notesArray = (String[][]) notesList.toArray(notesArray);
+		
 		//Return the string array
-		return notes_array;
+		return notesArray;
 	}
 }

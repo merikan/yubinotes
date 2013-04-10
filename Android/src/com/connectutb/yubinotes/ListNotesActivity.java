@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class ListNotesActivity extends ListActivity{
@@ -24,9 +25,9 @@ public class ListNotesActivity extends ListActivity{
 	//Database manager
 	DbManager db = new DbManager(this);
 	
-	private String[] notes = new String[0];
+	private String[][] notes;
 	private String TAG = "YubiNotes";
-	
+	ListNotesListAdapter lnla;
 	public SharedPreferences settings;
 	
 	public String folderId = "0";
@@ -39,8 +40,9 @@ public class ListNotesActivity extends ListActivity{
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 	    mode = getIntent().getIntExtra("mode", 0);
 		notes = db.listNotes("0",(int)mode);
+		lnla = new ListNotesListAdapter(this, notes);
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
-		setListAdapter(new ListNotesListAdapter(this, notes));	
+		setListAdapter(lnla);	
 	}
 
 	@Override
@@ -62,8 +64,7 @@ public class ListNotesActivity extends ListActivity{
         	startActivity(i);
     		}else{
     			folderId = "0";
-    			notes = db.listNotes(folderId, mode);
-        		setListAdapter(new ListNotesListAdapter(this, notes));	
+    			updateListAdapter(folderId, mode);;	
     		}
     		return true;
     	//New Note
@@ -73,38 +74,80 @@ public class ListNotesActivity extends ListActivity{
     	//New Folder
     	case R.id.action_new_folder:
     		showNewFolderDialog();
+    		return true;
 		//Delete note
     	case R.id.action_delete:
     		deleteSelectedNotes();
+    		return true;
+    	case R.id.action_favorite:
+    		favoriteSelectedNotes();
     	default:
     		return super.onOptionsItemSelected(item);
     	}
     }
+    
+ 
     
     private void deleteSelectedNotes(){
     	/** Loop through the notes and delete the entries that are checked **/
 
     	for (int i = 0; i < getListView().getLastVisiblePosition() + 1; i++){
 			Object o = getListAdapter().getItem(i);
+			String dirId = lnla.getNoteFolderId(i);
 	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
+	    	String noteId = o.toString();
 	    		if( cbox.isChecked() ) { 
-	    			String[] keywordArray = o.toString().split(";");
 	    			if (mode==3 || settings.getBoolean("use_trash", true) == false ){
-	    				db.deleteNotes(keywordArray[0],false);
+	    				db.deleteNotes(noteId,false);
 	    				Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_SHORT).show();
 	    			}
 	    			else{
-	    				db.deleteNotes(keywordArray[0],true);
+	    				db.deleteNotes(noteId,true);
 	    				Toast.makeText(this, R.string.note_trashed, Toast.LENGTH_SHORT).show();
 	    			}
-	    	    	notes = db.listNotes(keywordArray[3],mode);
+	    	    	notes = db.listNotes(dirId,mode);
 	    		}
     	}
-    	setListAdapter(new ListNotesListAdapter(this, notes));	
+    	
+    	//setListAdapter(new ListNotesListAdapter(this, notes));	
+    	updateListAdapter("0", mode);
     }
     
     private void favoriteSelectedNotes(){
-    	
+    	/** Loop through the notes and favorite the ones that are checked **/
+    	String dirId = "0";
+    	for (int i = 0; i < getListView().getLastVisiblePosition() + 1; i++){
+			Object o = getListAdapter().getItem(i);
+			dirId = lnla.getNoteFolderId(i);
+	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
+	    		if( cbox.isChecked() ) { 
+	    			String noteId = o.toString();
+	    			Log.d(TAG,noteId);
+	    			db.setFavoriteNotes(noteId,true);
+	    			Toast.makeText(this, R.string.note_starred, Toast.LENGTH_SHORT).show();
+	    		}
+    	}
+    	updateListAdapter(dirId, mode);
+    }
+    
+    public void unFavoriteNote(View v){
+    	 final int position = getListView().getPositionForView((RelativeLayout)v.getParent());
+    	 String dirId = "0";
+         if (position >= 0) {
+        	 dirId = lnla.getNoteFolderId(position);
+        	 Log.d(TAG, lnla.getNoteId(position));
+        	 String noteId = lnla.getNoteId(position);
+        	 db.setFavoriteNotes(noteId,false);
+        	 Toast.makeText(this, R.string.note_unstarred, Toast.LENGTH_SHORT).show();
+         }
+         
+         updateListAdapter(dirId, mode);
+    }
+    
+    public void updateListAdapter(String dirId, int mode){
+    	notes = db.listNotes(dirId,mode);
+    	lnla = new ListNotesListAdapter(this, notes);
+        setListAdapter(lnla);	
     }
     
     @Override
@@ -112,20 +155,17 @@ public class ListNotesActivity extends ListActivity{
     	super.onListItemClick(l, v, position, id);
     	// We retrieve the item that was clicked
     	Object o = this.getListAdapter().getItem(position);
-    	String keyword = o.toString();
-    	String[] keywordArray = keyword.split(";");
-    	
-		folderId = keywordArray[3];
-		String selectedNoteTitle = keywordArray[1];
-		String selectedNoteText = keywordArray[2];
-		int noteId = Integer.parseInt(keywordArray[0]);
+    	Log.d(TAG, "Item clicked!");
+		folderId = lnla.getNoteFolderId(position);
+		String selectedNoteTitle = lnla.getNoteTitle(position);
+		String selectedNoteText = lnla.getNoteText(position);
+		int noteId = Integer.parseInt(lnla.getNoteFolderId(position));
         //Is it a folder or a note?
-		Log.d(TAG, "TYPE: " + keywordArray[5]);
-    	if (Integer.parseInt(keywordArray[5]) == 0){
+		Log.d(TAG, "TYPE: " + lnla.getNoteType(position));
+    	if (Integer.parseInt(lnla.getNoteType(position)) == 0){
     		//its a folder, show the list of notes in that folder
-    		folderId = keywordArray[0];
-    		notes = db.listNotes(folderId, mode);
-    		setListAdapter(new ListNotesListAdapter(this, notes));	
+    		folderId = lnla.getNoteId(position);
+    		updateListAdapter(folderId, mode);
     	}else{
     		//Show the note
     		int mStackLevel = 1;
@@ -199,9 +239,8 @@ public class ListNotesActivity extends ListActivity{
     
     public void onNoteCreation() {
         // Refresh note list
+    	updateListAdapter(folderId, mode);
 		notes = db.listNotes(folderId,mode);
-		Log.d(TAG, "Showing notes with folderId " + folderId + " and mode " + mode);
-		setListAdapter(new ListNotesListAdapter(this, notes));	
     }
     
     @Override

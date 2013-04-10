@@ -7,24 +7,65 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ListNotesListAdapter extends ArrayAdapter<String>{
+	private static final String TAG ="YubiNotes";
 	private final Activity context;
-	private final String[] noteslist;
+	private final String[][] notesList;
 
 
-	public ListNotesListAdapter(Activity context, String[] noteslist){
-		super(context, R.layout.list_row_layout, noteslist);
+	public ListNotesListAdapter(Activity context, String[][] notesList){
+		super(context, R.layout.list_row_layout);
 		this.context = context;
-		this.noteslist = noteslist;
+		this.notesList = notesList;
 	}
 	static class ViewHolder{
 		public TextView textViewTitle;
 		public TextView textViewTimestamp;
 		public ImageView imageViewIcon;
+		public Button buttonFav;
 	}
+	
+	@Override
+	public int getCount(){
+		
+		return notesList.length;
+	}
+	
+	@Override
+    public String getItem(int i) {   
+		String[] noteList = notesList[i];
+		return noteList[0];    
+    }
+	
+	public String getNoteId(int i){
+		String[] noteList = notesList[i];
+		return noteList[0];  
+	}
+	
+	public String getNoteTitle(int i){
+		String[] noteList = notesList[i];
+		return noteList[1];  
+	}
+	
+	public String getNoteText(int i){
+		String[] noteList = notesList[i];
+		return noteList[2];  
+	}
+	
+	public String getNoteFolderId(int i){
+		String[] noteList = notesList[i];
+		return noteList[3];  
+	}
+	
+	public String getNoteType(int i){
+		String[] noteList = notesList[i];
+		return noteList[9];  
+	}
+	
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -43,19 +84,25 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder.textViewTitle = (TextView) rowView.findViewById(R.id.textViewNoteTitle);
 			holder.textViewTimestamp = (TextView) rowView.findViewById(R.id.textViewNoteDate);
 			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewNoteIcon);
+			holder.buttonFav = (Button) rowView.findViewById(R.id.buttonNoteFav);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
 		}
 		
-		Log.d("YubiNotes",noteslist[position]);
-		String[] arrayString = noteslist[position].split(";");
+		
+		String[] arrayString = notesList[position];
 		holder.textViewTitle.setText(arrayString[1]);
-		holder.textViewTimestamp.setText(arrayString[4]);
+		holder.textViewTimestamp.setText(arrayString[5]);
+		int isFavorite = Integer.parseInt(arrayString[8]);
+		if (isFavorite==0){
+			holder.buttonFav.setVisibility(View.GONE);
+			Log.d(TAG, "Button hidden");
+		}
 		
 		String noteText = arrayString[2];
 		// Set appropriate icon 
-		int noteType = Integer.parseInt(arrayString[5]);
+		int noteType = Integer.parseInt(arrayString[9]);
 		if (noteType==1){
 			holder.imageViewIcon.setImageResource(R.drawable.note);
 		}else{

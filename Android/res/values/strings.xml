@@ -55,7 +55,10 @@
     <string name="note_delete">Delete</string>
     <string name="note_trashed">Note trashed</string>
  	<string name="note_deleted">Note deleted</string>
+ 	<string name="note_starred">Note added to favorites</string>
+ 	<string name="note_unstarred">Note removed from favorites</string>
  	<string name="action_favorite">Favorite</string>
+ 	<string name="note_fav">Favorite</string>
  	
  	<!-- Prefs -->
  	<string name="prefs_yubinotes">Preferences</string>

@@ -128,10 +128,9 @@ public class MainActivity extends ListActivity {
     	String keyword = o.toString();
         Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
         i.putExtra("mode", (int)id);
-        int resultCode = 0;
     	//If ignore lock is disabled, only proceed if notes are unlocked
     	if (settings.getBoolean("ignore_lock", false)==true){
-    		startActivityForResult(i, resultCode);
+    		startActivity(i);
     	}else{
     		if (isLocked){
     			Toast.makeText(this, R.string.unlock_first, Toast.LENGTH_SHORT).show();
@@ -145,7 +144,7 @@ public class MainActivity extends ListActivity {
     				}
     			}
     		}else{
-    			startActivityForResult(i, resultCode);
+    			startActivity(i);
     		}
     	}
     }
@@ -226,7 +225,8 @@ public class MainActivity extends ListActivity {
     	/* Load our preferences */
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
     	if (settings.getBoolean("autolock", true) == true){
-    		lockKeys();
+    		//.. Its not a good idea..
+    		//lockKeys();
     	}
     	// register for all NDEF tags starting with http och https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
