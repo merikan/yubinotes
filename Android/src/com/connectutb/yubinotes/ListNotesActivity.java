@@ -159,7 +159,7 @@ public class ListNotesActivity extends ListActivity{
 		folderId = lnla.getNoteFolderId(position);
 		String selectedNoteTitle = lnla.getNoteTitle(position);
 		String selectedNoteText = lnla.getNoteText(position);
-		int noteId = Integer.parseInt(lnla.getNoteFolderId(position));
+		int noteId = Integer.parseInt(lnla.getNoteId(position));
         //Is it a folder or a note?
 		Log.d(TAG, "TYPE: " + lnla.getNoteType(position));
     	if (Integer.parseInt(lnla.getNoteType(position)) == 0){
