@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -15,15 +16,19 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 	
 	/* Our preferences */
 	public SharedPreferences settings;
@@ -35,13 +40,21 @@ public class MainActivity extends ListActivity {
 	
 	private boolean isLocked = true;
 	
+	private ListView catList;
+	private TextView statusText;
+	
 	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main_layout);
+		catList = (ListView) findViewById(R.id.listViewNoteCategories);
+		statusText = (TextView) findViewById(R.id.textViewLockStatus);
+		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
+		statusText.setTypeface(tf);
 		nav_items = getResources().getStringArray(R.array.nav_items);
-		setListAdapter(new MainListAdapter(this, nav_items));	
+		catList.setAdapter(new MainListAdapter(this, nav_items));	
 		
 		Bundle extras = getIntent().getExtras();
 		
@@ -74,6 +87,41 @@ public class MainActivity extends ListActivity {
 			// Show the setup dialog
 			showWelcomeDialog();
 		}
+		
+		
+		catList.setOnItemClickListener(new OnItemClickListener(){
+
+
+			@Override
+			public void onItemClick(AdapterView<?> l, View v, int position,
+					long id) {
+				// TODO Auto-generated method stub
+		    	// We retrieve the item that was clicked
+		    	Object o = catList.getAdapter().getItem(position);
+		    	String keyword = o.toString();
+		        Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
+		        i.putExtra("mode", (int)id);
+		    	//If ignore lock is disabled, only proceed if notes are unlocked
+		    	if (settings.getBoolean("ignore_lock", false)==true){
+		    		startActivity(i);
+		    	}else{
+		    		if (isLocked){
+		    			Toast.makeText(getBaseContext(), R.string.unlock_first, Toast.LENGTH_SHORT).show();
+		    			
+		    			//If we use password unlock, ask users for password here
+		    			if (settings.getBoolean("use_yubi", true)==false){
+		    				if (settings.getBoolean("password_set",false)==false){
+		    					showPasswordDialog(true);
+		    				}else {
+		    					showPasswordDialog(false);
+		    				}
+		    			}
+		    		}else{
+		    			startActivity(i);
+		    		}
+		    	}
+			}
+			});
 	}
 	
 	@Override
@@ -119,35 +167,6 @@ public class MainActivity extends ListActivity {
 		editor.putString("crypt2", id2.substring(0,16));
 		editor.commit();
 	}
-    
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id){
-    	super.onListItemClick(l, v, position, id);
-    	// We retrieve the item that was clicked
-    	Object o = this.getListAdapter().getItem(position);
-    	String keyword = o.toString();
-        Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
-        i.putExtra("mode", (int)id);
-    	//If ignore lock is disabled, only proceed if notes are unlocked
-    	if (settings.getBoolean("ignore_lock", false)==true){
-    		startActivity(i);
-    	}else{
-    		if (isLocked){
-    			Toast.makeText(this, R.string.unlock_first, Toast.LENGTH_SHORT).show();
-    			
-    			//If we use password unlock, ask users for password here
-    			if (settings.getBoolean("use_yubi", true)==false){
-    				if (settings.getBoolean("password_set",false)==false){
-    					showPasswordDialog(true);
-    				}else {
-    					showPasswordDialog(false);
-    				}
-    			}
-    		}else{
-    			startActivity(i);
-    		}
-    	}
-    }
     
     public void showPasswordDialog(boolean newPassword){
     	int mStackLevel = 1;
