@@ -18,7 +18,7 @@
 
 	<EditText
 	    android:id="@+id/textViewNewNoteText"
-	    android:inputType="textMultiLine"
+	    android:inputType="textMultiLine|textNoSuggestions"
 	    android:gravity="top|left"
 	    android:layout_below="@+id/textViewNewNoteTitle"
 	    android:layout_width="match_parent"

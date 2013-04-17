@@ -6,7 +6,7 @@
 
 	<EditText
 	    android:id="@+id/textViewViewNoteText"
-	    android:inputType="textMultiLine"
+	    android:inputType="textMultiLine|textNoSuggestions"
 	    android:gravity="top|left"
 	    android:layout_below="@+id/textViewViewNoteTitle"
 	    android:layout_width="match_parent"
