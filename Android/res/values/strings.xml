@@ -11,6 +11,8 @@
     <string name="keys_locked">Notes locked!</string>
     <string name="keys_unlocked">Notes unlocked!</string>
     <string name="unlock_first">Unlock notes first!</string>
+    <string name="status_notes_unlocked">Notes are currently unlocked</string>
+    <string name="status_notes_locked">Notes are currently locked</string>
     
     <!--  Unlock Dialog -->
     <string name="action_lock">Lock</string>

@@ -16,6 +16,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Base64;
 import android.util.Log;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +44,7 @@ public class MainActivity extends Activity {
 	
 	private ListView catList;
 	private TextView statusText;
+	private RelativeLayout statusLayout;
 	
 	private static final Pattern otpPattern = Pattern.compile("^.*([cbdefghijklnrtuv]{44})$");
 	
@@ -51,6 +54,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main_layout);
 		catList = (ListView) findViewById(R.id.listViewNoteCategories);
 		statusText = (TextView) findViewById(R.id.textViewLockStatus);
+		statusLayout = (RelativeLayout) findViewById(R.id.layoutStatus);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 		statusText.setTypeface(tf);
 		nav_items = getResources().getStringArray(R.array.nav_items);
@@ -88,7 +92,7 @@ public class MainActivity extends Activity {
 			showWelcomeDialog();
 		}
 		
-		
+		updateStatusIndicator(isLocked);
 		catList.setOnItemClickListener(new OnItemClickListener(){
 
 
@@ -291,9 +295,19 @@ public class MainActivity extends Activity {
     	editor.commit();
     	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
     	isLocked = true;
+    	updateStatusIndicator(isLocked);
     	invalidateOptionsMenu();
     }
     
+    public void updateStatusIndicator(boolean locked){
+    	if (locked){
+    		statusLayout.setBackgroundColor(Color.parseColor("#ed0000"));
+    		statusText.setText(R.string.status_notes_locked);
+    	}else{
+    		statusLayout.setBackgroundColor(Color.parseColor("#7bab32"));
+    		statusText.setText(R.string.status_notes_unlocked);
+    	}
+    }
     public void unlockNotesYubiOffline(){
     	/*
     	 * Generates the IV and secret key using XOR
@@ -313,6 +327,7 @@ public class MainActivity extends Activity {
     	editor.putBoolean("isLocked", false);
     	editor.commit();
     	isLocked = false;
+    	updateStatusIndicator(isLocked);
     	invalidateOptionsMenu();
     	Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
     	
@@ -352,6 +367,7 @@ public class MainActivity extends Activity {
     	    	editor.putString("crypt4", xorTheKeys(hash.substring(4,20),secret));
     	    	editor.commit();
     	    	isLocked = false;
+    	    	updateStatusIndicator(isLocked);
     	    	invalidateOptionsMenu();
     			Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
     		} else{
