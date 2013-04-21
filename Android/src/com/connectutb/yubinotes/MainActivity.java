@@ -219,9 +219,17 @@ public class MainActivity extends Activity {
     public void onModeSelection(boolean yubiMode){
     	//If we selected yubikey mode, set that in the settings
     	if (yubiMode){
-    		editor.putBoolean("use_yubi", true);
-    		if(settings.getBoolean("nfc_present", false)==true){
-    		Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT).show();
+    		try{
+    	        NfcAdapter.getDefaultAdapter(this).disableForegroundDispatch(this);
+    	        editor.putBoolean("nfc_present", true);
+    	        }catch (NullPointerException e){
+    	        	//No NFC present
+    	    		Log.d(TAG, "No NFC Present, moving on");
+    	    		editor.putBoolean("nfc_present", false);
+    	        }
+    		
+    		if(settings.getBoolean("nfc_present", true)==true){
+    			Toast.makeText(this, R.string.yubi_confirmation, Toast.LENGTH_SHORT).show();
     		}else{
     			//NFC not present..
     			Toast.makeText(this,R.string.yubi_no_nfc, Toast.LENGTH_LONG).show();

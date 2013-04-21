@@ -53,7 +53,6 @@ public class DbManager extends SQLiteOpenHelper{
 				+ NOTES_VIEWED + " TIMESTAMP," + NOTES_TRASH + " INTEGER,"
 				+ NOTES_STARRED + " INTEGER," + NOTES_TYPE + " INTEGER)";
 		db.execSQL(CREATE_NOTES_TABLE);
-		db.close();
 	}
 
 	@Override

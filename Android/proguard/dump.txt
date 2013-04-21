@@ -39001,85 +39001,114 @@ Methods (count = 22):
     Access flags: 0x1
       = public void b(boolean)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 105, locals = 2, stack = 3):
+    + Code attribute instructions (code length = 140, locals = 3, stack = 3):
       [0] iload_1 v1
-      [1] ifeq +57 (target=58)
+      [1] ifeq +92 (target=93)
       [4] aload_0 v0
-      [5] getfield #93
+      [5] invokestatic #128
+        + Methodref [android/nfc/NfcAdapter.getDefaultAdapter (Landroid/content/Context;)Landroid/nfc/NfcAdapter;]
+      [8] aload_0 v0
+      [9] invokevirtual #126
+        + Methodref [android/nfc/NfcAdapter.disableForegroundDispatch (Landroid/app/Activity;)V]
+      [12] aload_0 v0
+      [13] getfield #93
         + Fieldref [com/connectutb/yubinotes/MainActivity.b Landroid/content/SharedPreferences$Editor;]
-      [8] ldc #49
-        + String [use_yubi]
-      [10] iconst_1
-      [11] invokeinterface #185
-        + InterfaceMethodref [android/content/SharedPreferences$Editor.putBoolean (Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;]
-      [16] pop
-      [17] aload_0 v0
-      [18] getfield #92
-        + Fieldref [com/connectutb/yubinotes/MainActivity.a Landroid/content/SharedPreferences;]
-      [21] ldc #45
+      [16] ldc #45
         + String [nfc_present]
-      [23] iconst_0
-      [24] invokeinterface #182
+      [18] iconst_1
+      [19] invokeinterface #185
+        + InterfaceMethodref [android/content/SharedPreferences$Editor.putBoolean (Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;]
+      [24] pop
+      [25] goto +27 (target=52)
+      [28] astore_2 v2
+      [29] aload_0 v0
+      [30] getfield #96
+        + Fieldref [com/connectutb/yubinotes/MainActivity.e Ljava/lang/String;]
+      [33] ldc #25
+        + String [No NFC Present, moving on]
+      [35] invokestatic #135
+        + Methodref [android/util/Log.d (Ljava/lang/String;Ljava/lang/String;)I]
+      [38] pop
+      [39] aload_0 v0
+      [40] getfield #93
+        + Fieldref [com/connectutb/yubinotes/MainActivity.b Landroid/content/SharedPreferences$Editor;]
+      [43] ldc #45
+        + String [nfc_present]
+      [45] iconst_0
+      [46] invokeinterface #185
+        + InterfaceMethodref [android/content/SharedPreferences$Editor.putBoolean (Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;]
+      [51] pop
+      [52] aload_0 v0
+      [53] getfield #92
+        + Fieldref [com/connectutb/yubinotes/MainActivity.a Landroid/content/SharedPreferences;]
+      [56] ldc #45
+        + String [nfc_present]
+      [58] iconst_1
+      [59] invokeinterface #182
         + InterfaceMethodref [android/content/SharedPreferences.getBoolean (Ljava/lang/String;Z)Z]
-      [29] ifeq +16 (target=45)
-      [32] aload_0 v0
-      [33] ldc #9
+      [64] ifeq +16 (target=80)
+      [67] aload_0 v0
+      [68] ldc #9
         + Integer [2131165207]
-      [35] iconst_0
-      [36] invokestatic #143
+      [70] iconst_0
+      [71] invokestatic #143
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
-      [39] invokevirtual #144
+      [74] invokevirtual #144
         + Methodref [android/widget/Toast.show ()V]
-      [42] goto +39 (target=81)
-      [45] aload_0 v0
-      [46] ldc #10
+      [77] goto +39 (target=116)
+      [80] aload_0 v0
+      [81] ldc #10
         + Integer [2131165208]
-      [48] iconst_1
-      [49] invokestatic #143
+      [83] iconst_1
+      [84] invokestatic #143
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
-      [52] invokevirtual #144
+      [87] invokevirtual #144
         + Methodref [android/widget/Toast.show ()V]
-      [55] goto +26 (target=81)
-      [58] aload_0 v0
-      [59] ldc #11
+      [90] goto +26 (target=116)
+      [93] aload_0 v0
+      [94] ldc #11
         + Integer [2131165209]
-      [61] iconst_0
-      [62] invokestatic #143
+      [96] iconst_0
+      [97] invokestatic #143
         + Methodref [android/widget/Toast.makeText (Landroid/content/Context;II)Landroid/widget/Toast;]
-      [65] invokevirtual #144
+      [100] invokevirtual #144
         + Methodref [android/widget/Toast.show ()V]
-      [68] aload_0 v0
-      [69] getfield #93
+      [103] aload_0 v0
+      [104] getfield #93
         + Fieldref [com/connectutb/yubinotes/MainActivity.b Landroid/content/SharedPreferences$Editor;]
-      [72] ldc #49
+      [107] ldc #49
         + String [use_yubi]
-      [74] iconst_0
-      [75] invokeinterface #185
+      [109] iconst_0
+      [110] invokeinterface #185
         + InterfaceMethodref [android/content/SharedPreferences$Editor.putBoolean (Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;]
-      [80] pop
-      [81] aload_0 v0
-      [82] getfield #93
+      [115] pop
+      [116] aload_0 v0
+      [117] getfield #93
         + Fieldref [com/connectutb/yubinotes/MainActivity.b Landroid/content/SharedPreferences$Editor;]
-      [85] ldc #38
+      [120] ldc #38
         + String [firstRun]
-      [87] iconst_0
-      [88] invokeinterface #185
+      [122] iconst_0
+      [123] invokeinterface #185
         + InterfaceMethodref [android/content/SharedPreferences$Editor.putBoolean (Ljava/lang/String;Z)Landroid/content/SharedPreferences$Editor;]
-      [93] pop
-      [94] aload_0 v0
-      [95] getfield #93
+      [128] pop
+      [129] aload_0 v0
+      [130] getfield #93
         + Fieldref [com/connectutb/yubinotes/MainActivity.b Landroid/content/SharedPreferences$Editor;]
-      [98] invokeinterface #184
+      [133] invokeinterface #184
         + InterfaceMethodref [android/content/SharedPreferences$Editor.commit ()Z]
-      [103] pop
-      [104] return
-      Code attribute exceptions (count = 0):
+      [138] pop
+      [139] return
+      Code attribute exceptions (count = 1):
+      - ExceptionInfo (4 -> 25: 28):
+      + Class [java/lang/NullPointerException]
       Code attribute attributes (attribute count = 1):
-      + Stack map table attribute (count = 4):
-        - [45] Var: ..., Stack: (empty)
-        - [55] Var: ..., Stack: (empty)
-        - [58] Var: ..., Stack: (empty)
-        - [81] Var: ..., Stack: (empty)
+      + Stack map table attribute (count = 6):
+        - [28] Var: ..., Stack: [a:java/lang/NullPointerException]
+        - [52] Var: ..., Stack: (empty)
+        - [80] Var: ..., Stack: (empty)
+        - [90] Var: ..., Stack: (empty)
+        - [93] Var: ..., Stack: (empty)
+        - [116] Var: ..., Stack: (empty)
   + Method:       onPause()V
     Access flags: 0x1
       = public void onPause()
@@ -44366,7 +44395,7 @@ Methods (count = 9):
     Access flags: 0x1
       = public void onCreate(android.database.sqlite.SQLiteDatabase)
     Class member attributes (count = 1):
-    + Code attribute instructions (code length = 13, locals = 3, stack = 2):
+    + Code attribute instructions (code length = 9, locals = 3, stack = 2):
       [0] ldc #15
         + String [CREATE TABLE notes(id INTEGER PRIMARY KEY,title TEXT,text TEXT,dir TEXT,created_timestamp TIMESTAMP,modified_timestamp TIMESTAMP,viewed_timestamp TIMESTAMP,trashed INTEGER,starred INTEGER,type INTEGER)]
       [2] astore_2 v2
@@ -44374,10 +44403,7 @@ Methods (count = 9):
       [4] aload_2 v2
       [5] invokevirtual #64
         + Methodref [android/database/sqlite/SQLiteDatabase.execSQL (Ljava/lang/String;)V]
-      [8] aload_1 v1
-      [9] invokevirtual #63
-        + Methodref [android/database/sqlite/SQLiteDatabase.close ()V]
-      [12] return
+      [8] return
       Code attribute exceptions (count = 0):
       Code attribute attributes (attribute count = 0):
   + Method:       onUpgrade(Landroid/database/sqlite/SQLiteDatabase;II)V
