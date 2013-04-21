@@ -153,43 +153,45 @@ public class ListNotesActivity extends ListActivity{
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
-    	// We retrieve the item that was clicked
-    	Object o = this.getListAdapter().getItem(position);
-    	Log.d(TAG, "Item clicked!");
-		folderId = lnla.getNoteFolderId(position);
-		String selectedNoteTitle = lnla.getNoteTitle(position);
-		String selectedNoteText = lnla.getNoteText(position);
-		int noteId = Integer.parseInt(lnla.getNoteId(position));
-        //Is it a folder or a note?
-		Log.d(TAG, "TYPE: " + lnla.getNoteType(position));
-    	if (Integer.parseInt(lnla.getNoteType(position)) == 0){
-    		//its a folder, show the list of notes in that folder
-    		folderId = lnla.getNoteId(position);
-    		updateListAdapter(folderId, mode);
-    	}else{
-    		//Show the note
-    		int mStackLevel = 1;
-
-    	    // DialogFragment.show() will take care of adding the fragment
-    	    // in a transaction.  We also want to remove any currently showing
-    	    // dialog, so make our own transaction and take care of that here.
-    	    FragmentTransaction ft = getFragmentManager().beginTransaction();
-    	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotesviewdialog");
-    	    if (prev != null) {
-    	        ft.remove(prev);
-    	    }
-    	    ft.addToBackStack(null);
-    	    
-    	    // Supply num input as an argument.
-            Bundle args = new Bundle();
-            args.putString("folderId", folderId);
-            args.putString("title", selectedNoteTitle);
-            args.putString("text",selectedNoteText);
-            args.putInt("noteId", noteId);
-    	    // Create and show the dialog.
-    	    DialogFragment newFragment = ViewNoteDialog.newInstance(mStackLevel);
-    	    newFragment.setArguments(args);
-    	    newFragment.show(ft, "yubinotesviewdialog");
+    	//If we are in trash mode, dont do anything.. 
+    	if (mode!=3){
+	    	// We retrieve the item that was clicked
+	    	Log.d(TAG, "Item clicked!");
+			folderId = lnla.getNoteFolderId(position);
+			String selectedNoteTitle = lnla.getNoteTitle(position);
+			String selectedNoteText = lnla.getNoteText(position);
+			int noteId = Integer.parseInt(lnla.getNoteId(position));
+	        //Is it a folder or a note?
+			Log.d(TAG, "TYPE: " + lnla.getNoteType(position));
+	    	if (Integer.parseInt(lnla.getNoteType(position)) == 0){
+	    		//its a folder, show the list of notes in that folder
+	    		folderId = lnla.getNoteId(position);
+	    		updateListAdapter(folderId, mode);
+	    	}else{
+	    		//Show the note
+	    		int mStackLevel = 1;
+	
+	    	    // DialogFragment.show() will take care of adding the fragment
+	    	    // in a transaction.  We also want to remove any currently showing
+	    	    // dialog, so make our own transaction and take care of that here.
+	    	    FragmentTransaction ft = getFragmentManager().beginTransaction();
+	    	    Fragment prev = getFragmentManager().findFragmentByTag("yubinotesviewdialog");
+	    	    if (prev != null) {
+	    	        ft.remove(prev);
+	    	    }
+	    	    ft.addToBackStack(null);
+	    	    
+	    	    // Supply num input as an argument.
+	            Bundle args = new Bundle();
+	            args.putString("folderId", folderId);
+	            args.putString("title", selectedNoteTitle);
+	            args.putString("text",selectedNoteText);
+	            args.putInt("noteId", noteId);
+	    	    // Create and show the dialog.
+	    	    DialogFragment newFragment = ViewNoteDialog.newInstance(mStackLevel);
+	    	    newFragment.setArguments(args);
+	    	    newFragment.show(ft, "yubinotesviewdialog");
+	    	}
     	}
     }
     

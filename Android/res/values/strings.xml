@@ -27,7 +27,7 @@
     <string name="yubi_title">YubiKey Mode</string>
     <string name="yubi_description">With a YubiKey NEO and an NFC capable device, you can quickly unlock your notes by simply tapping the device with your YubiKey.</string>
     <string name="password_title">Password Mode</string>
-    <string name="password_description">You will be able to unlock your notes by supplying your user set password.</string>
+    <string name="password_description">You will be able to unlock your notes by supplying your user set password. NOTE: If you forget your password, your notes are lost forever.</string>
     <string name="yubi_confirmation">To begin, scan your YubiKey using NFC</string>
     <string name="yubi_no_nfc">No NFC capabilities detected. Please make sure you have NFC enabled. If not, you can disable YubiKey mode in app preferences</string>
     <string name="password_confirmation">You will be asked to set your password when you start creating notes</string>

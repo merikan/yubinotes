@@ -184,7 +184,7 @@ public class DbManager extends SQLiteOpenHelper{
 		}else if (mode==1){
 			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TRASH + "=0 ORDER BY " + NOTES_MODIFIED + " DESC";
 		}else if (mode==2){
-			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_STARRED + "=1";	
+			sqlQuery = "SELECT * FROM " + TABLE_NOTES + " WHERE " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_STARRED + "=1 OR " + NOTES_DIR + " ='"+dirId+"' AND "+ NOTES_TYPE + "=0";	
 			Log.d(TAG, "Listing favorite notes");
 		}else if (mode==3){
 			Log.d(TAG, "Selecting trashed");

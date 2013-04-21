@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -249,7 +248,6 @@ public class MainActivity extends Activity {
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
     	if (settings.getBoolean("autolock", true) == true){
     		//.. Its not a good idea..
-    		//lockKeys();
     	}
     	// register for all NDEF tags starting with http och https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
