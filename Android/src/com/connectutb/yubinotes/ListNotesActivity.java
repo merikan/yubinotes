@@ -49,6 +49,11 @@ public class ListNotesActivity extends ListActivity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.notes, menu);
+	    if (mode==3){
+	        menu.getItem(0).setEnabled(false);
+	        menu.getItem(1).setEnabled(false);
+	        menu.getItem(2).setEnabled(false);
+	    }
 		return true;
 	}
 	

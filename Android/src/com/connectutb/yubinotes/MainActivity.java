@@ -4,6 +4,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -136,9 +137,11 @@ public class MainActivity extends Activity {
 	
 	@Override
 	public boolean onPrepareOptionsMenu (Menu menu) {
-	    if (isLocked)
+	    if (isLocked){
 	        menu.getItem(0).setEnabled(false);
+	    }
 	    return true;
+	   
 	}
 	
 	/* Action on menu selection */
@@ -155,9 +158,16 @@ public class MainActivity extends Activity {
     		Intent settingsIntent = new Intent(this, Preferences.class);
         	startActivity(settingsIntent);	 
     		return true;
-    	//New Note
+    	//Lock Notes
     	case R.id.action_lock:
     		lockKeys();
+    		return true;
+    	case R.id.action_feedback:
+    		/* Show app listing */
+        	Intent intent = new Intent(Intent.ACTION_VIEW); 
+        	intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.connectutb.yubinotes")); 
+        	startActivity(intent);
+        	return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}

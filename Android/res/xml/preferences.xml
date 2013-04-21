@@ -23,7 +23,7 @@
             android:key="autolock"
             android:title="@string/prefs_autolock"
             android:summary="@string/prefs_autolock_summary"
-            android:defaultValue="True" />
+            android:defaultValue="False" />
        
         <CheckBoxPreference
             android:key="ignore_lock"
