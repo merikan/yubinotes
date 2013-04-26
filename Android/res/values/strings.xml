@@ -8,6 +8,7 @@
 	<string name="action_feedback">Feedback</string>
     <string name="action_new_note">New Note</string>
     <string name="action_new_folder">New Folder</string>
+    <string name="action_share">Share</string>
     <string name="keys_locked">Notes locked!</string>
     <string name="keys_unlocked">Notes unlocked!</string>
     <string name="unlock_first">Unlock notes first!</string>
@@ -78,4 +79,8 @@
 	
  	<!--  Widget -->
  	<string name="widget_label">YubiNotes</string>
+ 	
+ 	<!-- Share -->
+ 	<string name="share_title">[YubiNotes]</string>
+ 	<string name="share_multiple_notes">Shared Notes</string>
 </resources>

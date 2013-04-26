@@ -13,16 +13,24 @@
         android:showAsAction="ifRoom"
         android:icon="@drawable/new_folder"
         android:title="@string/action_new_folder"/>
-    
+   
+    <item
+        android:id="@+id/action_share_note"
+        android:orderInCategory="102"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/share"
+        android:title="@string/action_share"
+        android:actionProviderClass="android.widget.ShareActionProvider" />
+        
     <item
         android:id="@+id/action_favorite"
-        android:orderInCategory="102"
+        android:orderInCategory="103"
         android:showAsAction="ifRoom"
         android:title="@string/action_favorite"/>
     
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         android:showAsAction="ifRoom"
         android:icon="@drawable/delete"
         android:title="@string/note_delete"/>

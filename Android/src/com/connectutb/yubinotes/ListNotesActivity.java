@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 public class ListNotesActivity extends ListActivity{
@@ -32,6 +33,8 @@ public class ListNotesActivity extends ListActivity{
 	
 	public String folderId = "0";
 	public int mode = 0;
+	
+	private ShareActionProvider mShareActionProvider;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,55 @@ public class ListNotesActivity extends ListActivity{
 	        menu.getItem(1).setEnabled(false);
 	        menu.getItem(2).setEnabled(false);
 	    }
+	    
+	    // Locate MenuItem with ShareActionProvider
+	    MenuItem item = menu.findItem(R.id.action_share_note);
+	    
+	    // Fetch and store ShareActionProvider
+	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+
+	    mShareActionProvider.setShareIntent(createShareIntent());
 		return true;
+	}
+	
+	private Intent createShareIntent(){
+		/** Grab selected note(s) and create a nicely formatted output **/
+		String selectedNoteTitle = "";
+		String selectedNoteText = "";
+		int count = 0;
+		for (int i = 0; i < getListView().getLastVisiblePosition() + 1; i++){
+			Object o = getListAdapter().getItem(i);
+	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
+	    		if( cbox.isChecked() ) { 
+	    			
+	    			if (count > 1){
+	    				//If we are sharing more than one note, reorganize the output a bit..
+	    				selectedNoteTitle = String.valueOf(count) + " " + getString(R.string.share_multiple_notes);
+	    				selectedNoteText += System.getProperty("line.separator");
+	    				selectedNoteText += "------------------" + System.getProperty("line.separator");
+	    				selectedNoteText += lnla.getNoteText(i);
+	    			}else{
+	    			selectedNoteTitle = lnla.getNoteTitle(i);
+	    			selectedNoteText = lnla.getNoteText(i);
+	    			}
+	    			//Increase seleted counter
+	    			count ++;
+	    		}
+    	}
+
+		Intent I= new Intent(Intent.ACTION_SEND);
+        I.setType("text/plain");
+        I.putExtra(android.content.Intent.EXTRA_SUBJECT, R.string.share_title + " " + selectedNoteTitle);
+        I.putExtra(android.content.Intent.EXTRA_TEXT, selectedNoteText);
+        return I;
+	}
+	
+	// Call to update the share intent
+	@SuppressWarnings("unused")
+	private void setShareIntent(Intent shareIntent) {
+	    if (mShareActionProvider != null) {
+	        mShareActionProvider.setShareIntent(shareIntent);
+	    }
 	}
 	
 	/* Action on menu selection */
