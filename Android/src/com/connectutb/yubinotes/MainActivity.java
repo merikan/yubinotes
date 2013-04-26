@@ -234,6 +234,7 @@ public class MainActivity extends Activity {
     			//NFC not present..
     			Toast.makeText(this,R.string.yubi_no_nfc, Toast.LENGTH_LONG).show();
     		}
+    		editor.putBoolean("use_yubi", true);
     	}else{
     		Toast.makeText(this, R.string.password_confirmation, Toast.LENGTH_SHORT).show();
     		editor.putBoolean("use_yubi", false);

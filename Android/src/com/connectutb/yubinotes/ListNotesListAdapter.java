@@ -97,7 +97,6 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		int isFavorite = Integer.parseInt(arrayString[8]);
 		if (isFavorite==0){
 			holder.buttonFav.setVisibility(View.GONE);
-			Log.d(TAG, "Button hidden");
 		}
 		
 		String noteText = arrayString[2];
@@ -113,7 +112,6 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		holder.textViewTitle.setTypeface(tf);
 		holder.textViewTimestamp.setTypeface(tf);
 
-			
 		return rowView;
 	}
 }

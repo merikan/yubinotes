@@ -83,4 +83,5 @@
  	<!-- Share -->
  	<string name="share_title">[YubiNotes]</string>
  	<string name="share_multiple_notes">Shared Notes</string>
+ 	<string name="share_no_selection">No notes selected</string>
 </resources>

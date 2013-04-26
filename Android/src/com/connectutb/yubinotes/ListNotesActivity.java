@@ -58,13 +58,14 @@ public class ListNotesActivity extends ListActivity{
 	        menu.getItem(2).setEnabled(false);
 	    }
 	    
-	    // Locate MenuItem with ShareActionProvider
-	    MenuItem item = menu.findItem(R.id.action_share_note);
+	 // Get the ActionProvider
+	    mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share_note)
+	        .getActionProvider();
+	    // Initialize the share intent
+	    Intent intent = new Intent(Intent.ACTION_SEND);
+	    intent.setType("text/plain");
+	    mShareActionProvider.setShareIntent(intent);
 	    
-	    // Fetch and store ShareActionProvider
-	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-
-	    mShareActionProvider.setShareIntent(createShareIntent());
 		return true;
 	}
 	
@@ -88,8 +89,9 @@ public class ListNotesActivity extends ListActivity{
 	    			selectedNoteTitle = lnla.getNoteTitle(i);
 	    			selectedNoteText = lnla.getNoteText(i);
 	    			}
-	    			//Increase seleted counter
+	    			//Increase selected counter
 	    			count ++;
+	    			Log.d(TAG, "Increasing sharing counter");
 	    		}
     	}
 
@@ -108,6 +110,42 @@ public class ListNotesActivity extends ListActivity{
 	    }
 	}
 	
+	public void shareNote(){
+		
+		/** Grab selected note(s) and create a nicely formatted output **/
+		String selectedNoteTitle = "";
+		String selectedNoteText = "";
+		int count = 0;
+		for (int i = 0; i < getListView().getLastVisiblePosition() + 1; i++){
+			Object o = getListAdapter().getItem(i);
+	    	CheckBox cbox = (CheckBox) ((View)getListView().getChildAt(i)).findViewById(R.id.checkBoxNoteSelect); 
+	    		if( cbox.isChecked() ) { 
+	    			
+	    			if (count >= 1){
+	    				//If we are sharing more than one note, reorganize the output a bit..
+	    				selectedNoteTitle = String.valueOf(count+1) + " " + getString(R.string.share_multiple_notes);
+	    				selectedNoteText += System.getProperty("line.separator");
+	    				selectedNoteText += "-----" + System.getProperty("line.separator");
+	    				selectedNoteText += lnla.getNoteText(i);
+	    			}else{
+	    				selectedNoteTitle = lnla.getNoteTitle(i);
+	    				selectedNoteText = lnla.getNoteText(i);
+	    			}
+	    			//Increase selected counter
+	    			count ++;
+	    		}
+    	}
+		if (count > 0){
+		// Populate the share intent with data
+	    Intent intent = new Intent(Intent.ACTION_SEND);
+	    intent.setType("text/plain");
+	    intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.share_title) + " " + selectedNoteTitle);
+	    intent.putExtra(android.content.Intent.EXTRA_TEXT, selectedNoteText);
+	    mShareActionProvider.setShareIntent(intent);
+		} else{
+			Toast.makeText(this, R.string.share_no_selection, Toast.LENGTH_SHORT).show();
+		}
+	}
 	/* Action on menu selection */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -137,12 +175,14 @@ public class ListNotesActivity extends ListActivity{
     		return true;
     	case R.id.action_favorite:
     		favoriteSelectedNotes();
+    		return true;
+    	case R.id.action_share_note:
+    		shareNote();
+    		return true;
     	default:
     		return super.onOptionsItemSelected(item);
     	}
     }
-    
- 
     
     private void deleteSelectedNotes(){
     	/** Loop through the notes and delete the entries that are checked **/
