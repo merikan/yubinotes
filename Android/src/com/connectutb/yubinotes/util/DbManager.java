@@ -163,6 +163,32 @@ public class DbManager extends SQLiteOpenHelper{
 		db.close();
 	}
 	
+	public int getCount(int mode){
+		
+		int retCount = 0;
+		SQLiteDatabase db = this.getWritableDatabase();
+		String sqlQuery = "";
+		
+		if (mode==0){
+			sqlQuery = "SELECT count(*) FROM " + TABLE_NOTES + " WHERE " + NOTES_TRASH + "=0 AND " + NOTES_TYPE + "=1";
+		}else if (mode==1){
+			sqlQuery = "SELECT count(*) FROM " + TABLE_NOTES + " WHERE " + NOTES_TRASH + "=0 AND " + NOTES_TYPE + "=1";
+		}else if (mode==2){
+			sqlQuery = "SELECT count(*) FROM " + TABLE_NOTES + " WHERE " + NOTES_STARRED + "=1 AND " + NOTES_TYPE + "=0";	
+		}else if (mode==3){
+			sqlQuery = "SELECT count(*) FROM " + TABLE_NOTES + " WHERE " + NOTES_TRASH + "=1";
+		}
+		
+		Cursor c = db.rawQuery(sqlQuery, null);
+		//Loop through the results and add it to the temp_array
+		if (c.moveToFirst()){
+			do{
+				retCount = c.getInt(0);
+			}while(c.moveToNext());
+		}
+		return retCount;
+	}
+	
 	public String[][] listNotes(String dirId, int mode){
 		/**
 		 * MODES

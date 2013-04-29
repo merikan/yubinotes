@@ -1,5 +1,7 @@
 package com.connectutb.yubinotes;
 
+import com.connectutb.yubinotes.util.DbManager;
+
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ public class MainListAdapter extends ArrayAdapter<String>{
 	
 	static class ViewHolder{
 		public TextView textViewTitle;
+		public TextView textViewCount;
 		public ImageView imageViewIcon;
 	}
 
@@ -40,6 +43,7 @@ public class MainListAdapter extends ArrayAdapter<String>{
 			holder = new ViewHolder();
 			holder.textViewTitle = (TextView) rowView.findViewById(R.id.textViewTitle);
 			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewIcon);
+			holder.textViewCount = (TextView ) rowView.findViewById(R.id.textViewCount);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
@@ -49,6 +53,7 @@ public class MainListAdapter extends ArrayAdapter<String>{
 		int id = Integer.parseInt(arrayString[0]);
 		holder.textViewTitle.setText(arrayString[1]);
 		
+		DbManager db = new DbManager(context);
 		if (id==0){
 			holder.imageViewIcon.setImageResource(R.drawable.collection);
 		}
@@ -62,8 +67,18 @@ public class MainListAdapter extends ArrayAdapter<String>{
 			holder.imageViewIcon.setImageResource(R.drawable.trash);
 		}
 		
+		int itemCount = db.getCount(id);
+		
+		if (itemCount == 0 || id ==1){
+			//We dont need to show counters that are 0
+			holder.textViewCount.setText("");	
+		}else{
+			holder.textViewCount.setText(String.valueOf(itemCount));
+		}
+		
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");
 		holder.textViewTitle.setTypeface(tf);
+		holder.textViewCount.setTypeface(tf);
 		return rowView;
 	}
 }
