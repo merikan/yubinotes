@@ -6,14 +6,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class NewFolderDialog extends DialogFragment{
 	
 	EditText folderTitleView;
+	TextView folderTitleText;
 	String folderTitle;
 	String folderId; 
 	
@@ -61,8 +64,12 @@ public class NewFolderDialog extends DialogFragment{
 	            	   NewFolderDialog.this.getDialog().cancel();
 	               }
 	           });      
-
+	    
+	    Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
 	    folderTitleView = (EditText) v.findViewById(R.id.textViewNewFolderTitle);
+	    folderTitleText = (TextView) v.findViewById(R.id.textViewNewFolderLabel);
+	    folderTitleView.setTypeface(tf);
+	    folderTitleText.setTypeface(tf);
 	    return builder.create();
 	}
 
