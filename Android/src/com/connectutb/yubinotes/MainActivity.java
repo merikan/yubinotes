@@ -102,7 +102,6 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 		    	// We retrieve the item that was clicked
 		    	Object o = catList.getAdapter().getItem(position);
-		    	String keyword = o.toString();
 		        Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
 		        i.putExtra("mode", (int)id);
 		    	//If ignore lock is disabled, only proceed if notes are unlocked
