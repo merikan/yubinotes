@@ -36,6 +36,7 @@
             android:title="@string/prefs_timelock_interval"
             android:summary="@string/prefs_timelock_interval_summary"
             android:dependency="timelock"
+            android:inputType="number"
             android:defaultValue="60" />
         
         <CheckBoxPreference

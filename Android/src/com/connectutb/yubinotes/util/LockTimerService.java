@@ -12,10 +12,12 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class LockTimerService extends IntentService {
 	  public int nId = 1;
+	  public int intervalInSecs;
 	  public SharedPreferences settings;
 	  public SharedPreferences.Editor editor;
 	  /** 
@@ -24,9 +26,7 @@ public class LockTimerService extends IntentService {
 	   */
 	  public LockTimerService() {
 	      super("LockTimerService");
-		  /* Load our preferences */
-		  settings = PreferenceManager.getDefaultSharedPreferences(this);
-		  editor = settings.edit();
+	      Log.d("YubiNotes", "Service started");
 	  }
 	  
 	  /**
@@ -37,14 +37,19 @@ public class LockTimerService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		int intervalInSecs = settings.getInt("timelock_interval", 0);
+		Log.d("YubiNotes", "onHandleIntent");
+		  /* Load our preferences */
+		  settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		  editor = settings.edit();
+		intervalInSecs = Integer.valueOf(settings.getString("timelock_interval", "0"));
+		
+		
 		/* First we create a notification if set to do so */
 		if (settings.getBoolean("timelock_notifcation", false) == true){
 			updateNotification(intervalInSecs);
+			Log.d("YubiNotes", "Showing notification");
 		}
-		/* Then we lock the notes after a period of time
-		 * 
-		 */
+		/* Then we lock the notes after a period of time */
 		int timeLeft = intervalInSecs;
 		long endTime = System.currentTimeMillis() + intervalInSecs * 1000;
 	      while (System.currentTimeMillis() < endTime) {
@@ -64,7 +69,12 @@ public class LockTimerService extends IntentService {
 	    	editor.putString("crypt4", "0000000000000000");
 	    	editor.putBoolean("isLocked", true);
 	    	editor.commit();
+	    	NotificationManager mNotificationManager =
+	    		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	    	mNotificationManager.cancelAll();
 	    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
+	    	int pid = android.os.Process.myPid(); 
+	    	android.os.Process.killProcess(pid); 
 		
 	}
 	
@@ -73,7 +83,7 @@ public class LockTimerService extends IntentService {
 		        new NotificationCompat.Builder(this)
 		        .setSmallIcon(R.drawable.ic_launcher)
 		        .setContentTitle(getString(R.string.notify_lock_title))
-		        .setContentText(getString(R.string.notify_lock_text) + String.valueOf(time));
+		        .setContentText(getString(R.string.notify_lock_text) + " " + String.valueOf(time) + " " + getString(R.string.generic_seconds));
 		// Creates an explicit intent for an Activity in your app
 		Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -91,6 +101,8 @@ public class LockTimerService extends IntentService {
 		            0,
 		            PendingIntent.FLAG_UPDATE_CURRENT
 		        );
+		mBuilder.setProgress(intervalInSecs, time, false);
+        // Displays the progress bar for the first time.
 		mBuilder.setContentIntent(resultPendingIntent);
 		NotificationManager mNotificationManager =
 		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -91,6 +91,7 @@
  	<string name="share_no_selection">No notes selected</string>
  	
  	<!-- Notification -->
- 	<string name="notify_lock_title">Time Lock</string>
- 	<string name="notify_lock_text">Time to lock: </string>
+ 	<string name="notify_lock_title">YubiNotes</string>
+ 	<string name="notify_lock_text">Notes locked in</string>
+ 	<string name="generic_seconds">seconds</string>
 </resources>

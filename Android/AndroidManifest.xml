@@ -42,7 +42,8 @@
             android:label="@string/prefs_yubinotes">
         </activity>
         
-        <service android:name="com.connectutb.yubinotes.util.LockTimerService" />
+        <service android:name=".util.LockTimerService">
+        </service>
         
         <receiver
        android:icon="@drawable/ic_launcher"

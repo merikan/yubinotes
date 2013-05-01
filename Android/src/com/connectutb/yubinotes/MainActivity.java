@@ -4,6 +4,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.connectutb.yubinotes.util.LockTimerService;
+
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -36,6 +39,8 @@ public class MainActivity extends Activity {
 	public SharedPreferences settings;
 	public SharedPreferences.Editor editor;
 	
+	public Context context;
+	
 	private String[] nav_items = new String[0];
 	private String otp = "NA";
 	private String TAG = "YubiNotes";
@@ -51,6 +56,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.context = this;
 		setContentView(R.layout.main_layout);
 		catList = (ListView) findViewById(R.id.listViewNoteCategories);
 		statusText = (TextView) findViewById(R.id.textViewLockStatus);
@@ -73,10 +79,7 @@ public class MainActivity extends Activity {
 		
     	//Wipe the keys from settings when we start the app if autolock is enabled
 		if (settings.getBoolean("autolock", true)==true){
-	    	editor.putString("crypt3", "0000000000000000");
-	    	editor.putString("crypt4", "0000000000000000");
-	    	editor.putBoolean("isLocked", true);
-	    	editor.commit();
+			lockKeys();
 		}
 		
 		//Update lock status
@@ -118,6 +121,10 @@ public class MainActivity extends Activity {
 		    				}
 		    			}
 		    		}else{
+		    			if (settings.getBoolean("timelock", true) == true){
+		    				Intent intent = new Intent(context, LockTimerService.class);
+		    				startService(intent);
+		    			}
 		    			startActivity(i);
 		    		}
 		    	}
@@ -379,6 +386,7 @@ public class MainActivity extends Activity {
     			//Password hash matches, unlock notes
     			editor.putString("crypt3", xorTheKeys(hash.substring(0,16), iv));
     	    	editor.putString("crypt4", xorTheKeys(hash.substring(4,20),secret));
+    	    	editor.putBoolean("isLocked", false);
     	    	editor.commit();
     	    	isLocked = false;
     	    	updateStatusIndicator(isLocked);

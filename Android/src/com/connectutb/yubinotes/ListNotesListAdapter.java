@@ -42,7 +42,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 	
 	public String getNoteId(int i){
 		String[] noteList = notesList[i];
-		return noteList[0];  
+		return noteList[0];
 	}
 	
 	public String getNoteTitle(int i){
