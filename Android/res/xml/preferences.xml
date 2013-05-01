@@ -22,11 +22,13 @@
         <CheckBoxPreference
             android:key="autolock"
             android:title="@string/prefs_autolock"
+            android:disableDependentsState="true"
             android:summary="@string/prefs_autolock_summary"
             android:defaultValue="False" />
         
         <CheckBoxPreference
             android:key="timelock"
+            android:dependency="autolock"
             android:title="@string/prefs_timelock"
             android:summary="@string/prefs_timelock_summary"
             android:defaultValue="True" />
