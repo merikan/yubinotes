@@ -80,7 +80,8 @@
  	<string name="prefs_timelock_interval_summary">The amount of seconds to wait before locking the notes</string>
  	<string name="prefs_ignore_lock">Ignore lock</string>
  	<string name="prefs_ignore_lock_summary">Enable this if you want to see encrypted data when notes are locked</string>
-	
+	<string name="prefs_timelock_notification">Show statusbar notification</string>
+	<string name="prefs_timelock_notification_summary">Show a notification icon indicating the status of the the timer lock</string>
  	<!--  Widget -->
  	<string name="widget_label">YubiNotes</string>
  	
@@ -88,4 +89,8 @@
  	<string name="share_title">[YubiNotes]</string>
  	<string name="share_multiple_notes">Shared Notes</string>
  	<string name="share_no_selection">No notes selected</string>
+ 	
+ 	<!-- Notification -->
+ 	<string name="notify_lock_title">Time Lock</string>
+ 	<string name="notify_lock_text">Time to lock: </string>
 </resources>

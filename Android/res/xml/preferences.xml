@@ -37,6 +37,13 @@
             android:summary="@string/prefs_timelock_interval_summary"
             android:dependency="timelock"
             android:defaultValue="60" />
+        
+        <CheckBoxPreference
+            android:key="timelock_notifcation"
+            android:title="@string/prefs_timelock_notification"
+            android:summary="@string/prefs_timelock_notification_summary"
+            android:dependency="timelock"
+            android:defaultValue="True" />
        
         <CheckBoxPreference
             android:key="ignore_lock"

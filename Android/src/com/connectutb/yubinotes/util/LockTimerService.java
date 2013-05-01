@@ -1,18 +1,32 @@
 package com.connectutb.yubinotes.util;
 
+import com.connectutb.yubinotes.MainActivity;
+import com.connectutb.yubinotes.R;
+
 import android.app.IntentService;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
+import android.widget.Toast;
 
 public class LockTimerService extends IntentService {
-	  private Context context;
+	  public int nId = 1;
+	  public SharedPreferences settings;
+	  public SharedPreferences.Editor editor;
 	  /** 
 	   * A constructor is required, and must call the super IntentService(String)
 	   * constructor with a name for the worker thread.
 	   */
-	  public LockTimerService(Context context) {
+	  public LockTimerService() {
 	      super("LockTimerService");
-		  this.context = context;
+		  /* Load our preferences */
+		  settings = PreferenceManager.getDefaultSharedPreferences(this);
+		  editor = settings.edit();
 	  }
 	  
 	  /**
@@ -23,7 +37,64 @@ public class LockTimerService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		/* First we create */
+		int intervalInSecs = settings.getInt("timelock_interval", 0);
+		/* First we create a notification if set to do so */
+		if (settings.getBoolean("timelock_notifcation", false) == true){
+			updateNotification(intervalInSecs);
+		}
+		/* Then we lock the notes after a period of time
+		 * 
+		 */
+		int timeLeft = intervalInSecs;
+		long endTime = System.currentTimeMillis() + intervalInSecs * 1000;
+	      while (System.currentTimeMillis() < endTime) {
+	          synchronized (this) {
+	              try {
+	            	  //Wait 1 second before updating notification
+	                  wait(1000);
+	                  timeLeft -= 1;
+	                  updateNotification(timeLeft);
+	              } catch (Exception e) {
+	              }
+	          }
+	      }
+	      
+	      //Time's up, lock the notes
+	    	editor.putString("crypt3", "0000000000000000");
+	    	editor.putString("crypt4", "0000000000000000");
+	    	editor.putBoolean("isLocked", true);
+	    	editor.commit();
+	    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
 		
+	}
+	
+	public void updateNotification(int time){
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(this)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle(getString(R.string.notify_lock_title))
+		        .setContentText(getString(R.string.notify_lock_text) + String.valueOf(time));
+		// Creates an explicit intent for an Activity in your app
+		Intent resultIntent = new Intent(this, MainActivity.class);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(MainActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager =
+		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(nId, mBuilder.build());
 	}
 }
