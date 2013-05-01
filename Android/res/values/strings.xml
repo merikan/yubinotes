@@ -69,11 +69,15 @@
  	<string name="prefs_general">General</string>
  	<string name="prefs_security">Security</string>
  	<string name="prefs_autolock">Automatic lock</string>
- 	<string name="prefs_autolock_summary">Automatically lock notes</string>
+ 	<string name="prefs_autolock_summary">Automatically lock notes when leaving notes list</string>
  	<string name="prefs_use_yubikey">YubiKey Mode</string>
  	<string name="prefs_use_yubikey_summary">Use your YubiKey NEO for locking/unlocking notes</string>
  	<string name="prefs_use_trash">Use Trash</string>
  	<string name="prefs_use_trash_summary">Deleted notes can be found in trash</string>
+ 	<string name="prefs_timelock">Timer lock</string>
+ 	<string name="prefs_timelock_summary">Lock notes automatically after a specified period of time</string>
+ 	<string name="prefs_timelock_interval">Time lock interval</string>
+ 	<string name="prefs_timelock_interval_summary">The amount of seconds to wait before locking the notes</string>
  	<string name="prefs_ignore_lock">Ignore lock</string>
  	<string name="prefs_ignore_lock_summary">Enable this if you want to see encrypted data when notes are locked</string>
 	

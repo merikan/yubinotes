@@ -24,6 +24,19 @@
             android:title="@string/prefs_autolock"
             android:summary="@string/prefs_autolock_summary"
             android:defaultValue="False" />
+        
+        <CheckBoxPreference
+            android:key="timelock"
+            android:title="@string/prefs_timelock"
+            android:summary="@string/prefs_timelock_summary"
+            android:defaultValue="True" />
+        
+        <EditTextPreference
+            android:key="timelock_interval"
+            android:title="@string/prefs_timelock_interval"
+            android:summary="@string/prefs_timelock_interval_summary"
+            android:dependency="timelock"
+            android:defaultValue="60" />
        
         <CheckBoxPreference
             android:key="ignore_lock"
