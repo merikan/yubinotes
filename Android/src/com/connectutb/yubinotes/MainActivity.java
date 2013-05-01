@@ -160,7 +160,11 @@ public class MainActivity extends Activity {
     	//Settings
     	case R.id.action_settings:
     		Intent settingsIntent = new Intent(this, Preferences.class);
+    		if (isLocked){
+    			Toast.makeText(getBaseContext(), R.string.unlock_first, Toast.LENGTH_SHORT).show();
+    		}else{
         	startActivity(settingsIntent);	 
+    		}
     		return true;
     	//Lock Notes
     	case R.id.action_lock:
