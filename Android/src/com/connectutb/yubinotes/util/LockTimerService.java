@@ -20,6 +20,7 @@ public class LockTimerService extends IntentService {
 	  public int intervalInSecs;
 	  public SharedPreferences settings;
 	  public SharedPreferences.Editor editor;
+	  public NotificationManager mNotificationManager;
 	  /** 
 	   * A constructor is required, and must call the super IntentService(String)
 	   * constructor with a name for the worker thread.
@@ -39,10 +40,10 @@ public class LockTimerService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d("YubiNotes", "onHandleIntent");
 		  /* Load our preferences */
-		  settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		  editor = settings.edit();
+		settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		editor = settings.edit();
 		intervalInSecs = Integer.valueOf(settings.getString("timelock_interval", "0"));
-		
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		/* First we create a notification if set to do so */
 		if (settings.getBoolean("timelock_notifcation", false) == true){
@@ -57,20 +58,27 @@ public class LockTimerService extends IntentService {
 	              try {
 	            	  //Wait 1 second before updating notification
 	                  wait(1000);
+	                  //Check if notes are suddenly locked, if so, stop the service.
+	                  if (settings.getBoolean("isLocked", true)==true){
+	                	  timeLeft = 0;
+	                	  //Dismiss the notification
+	                	  mNotificationManager.cancelAll();
+	                  }else{
 	                  timeLeft -= 1;
 	                  updateNotification(timeLeft);
+	                  }
 	              } catch (Exception e) {
 	              }
 	          }
 	      }
 	      
-	      //Time's up, lock the notes
+	      	//Time's up, lock the notes
 	    	editor.putString("crypt3", "0000000000000000");
 	    	editor.putString("crypt4", "0000000000000000");
 	    	editor.putBoolean("isLocked", true);
 	    	editor.commit();
-	    	NotificationManager mNotificationManager =
-	    		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+	    	
+	    		    
 	    	mNotificationManager.cancelAll();
 	    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
 	    	int pid = android.os.Process.myPid(); 
@@ -104,8 +112,6 @@ public class LockTimerService extends IntentService {
 		mBuilder.setProgress(intervalInSecs, time, false);
         // Displays the progress bar for the first time.
 		mBuilder.setContentIntent(resultPendingIntent);
-		NotificationManager mNotificationManager =
-		    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// mId allows you to update the notification later on.
 		mNotificationManager.notify(nId, mBuilder.build());
 	}

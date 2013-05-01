@@ -63,14 +63,19 @@ public class MainActivity extends Activity {
 		statusLayout = (RelativeLayout) findViewById(R.id.layoutStatus);
 		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Light.ttf");
 		statusText.setTypeface(tf);
-		nav_items = getResources().getStringArray(R.array.nav_items);
+		/* Load our preferences */
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
+		editor = settings.edit();
+		
+		if (settings.getBoolean("use_trash", true)==false){
+			nav_items = getResources().getStringArray(R.array.nav_items_alt);
+		}else{
+			nav_items = getResources().getStringArray(R.array.nav_items);
+		}
 		catList.setAdapter(new MainListAdapter(this, nav_items));	
 		
 		Bundle extras = getIntent().getExtras();
 		
-		/* Load our preferences */
-		settings = PreferenceManager.getDefaultSharedPreferences(this);
-		editor = settings.edit();
 		
 		if (settings.getString("crypt1", "").length() < 3){
 			Log.d(TAG, "Generating security keys");
