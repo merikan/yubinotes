@@ -87,32 +87,37 @@ public class LockTimerService extends IntentService {
 	}
 	
 	public void updateNotification(int time){
-		NotificationCompat.Builder mBuilder =
-		        new NotificationCompat.Builder(this)
-		        .setSmallIcon(R.drawable.ic_launcher)
-		        .setContentTitle(getString(R.string.notify_lock_title))
-		        .setContentText(getString(R.string.notify_lock_text) + " " + String.valueOf(time) + " " + getString(R.string.generic_seconds));
-		// Creates an explicit intent for an Activity in your app
-		Intent resultIntent = new Intent(this, MainActivity.class);
-
-		// The stack builder object will contain an artificial back stack for the
-		// started Activity.
-		// This ensures that navigating backward from the Activity leads out of
-		// your application to the Home screen.
-		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-		// Adds the back stack for the Intent (but not the Intent itself)
-		stackBuilder.addParentStack(MainActivity.class);
-		// Adds the Intent that starts the Activity to the top of the stack
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent =
-		        stackBuilder.getPendingIntent(
-		            0,
-		            PendingIntent.FLAG_UPDATE_CURRENT
-		        );
-		mBuilder.setProgress(intervalInSecs, time, false);
-        // Displays the progress bar for the first time.
-		mBuilder.setContentIntent(resultPendingIntent);
-		// mId allows you to update the notification later on.
-		mNotificationManager.notify(nId, mBuilder.build());
+		//Check that time is greater than 0, if not close down shop.
+		if (time < 0){
+			mNotificationManager.cancelAll();
+		}else{
+			NotificationCompat.Builder mBuilder =
+			        new NotificationCompat.Builder(this)
+			        .setSmallIcon(R.drawable.ic_launcher)
+			        .setContentTitle(getString(R.string.notify_lock_title))
+			        .setContentText(getString(R.string.notify_lock_text) + " " + String.valueOf(time) + " " + getString(R.string.generic_seconds));
+			// Creates an explicit intent for an Activity in your app
+			Intent resultIntent = new Intent(this, MainActivity.class);
+	
+			// The stack builder object will contain an artificial back stack for the
+			// started Activity.
+			// This ensures that navigating backward from the Activity leads out of
+			// your application to the Home screen.
+			TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+			// Adds the back stack for the Intent (but not the Intent itself)
+			stackBuilder.addParentStack(MainActivity.class);
+			// Adds the Intent that starts the Activity to the top of the stack
+			stackBuilder.addNextIntent(resultIntent);
+			PendingIntent resultPendingIntent =
+			        stackBuilder.getPendingIntent(
+			            0,
+			            PendingIntent.FLAG_UPDATE_CURRENT
+			        );
+			mBuilder.setProgress(intervalInSecs, time, false);
+	        // Displays the progress bar for the first time.
+			mBuilder.setContentIntent(resultPendingIntent);
+			// mId allows you to update the notification later on.
+			mNotificationManager.notify(nId, mBuilder.build());
+		}
 	}
 }
