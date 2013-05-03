@@ -71,22 +71,33 @@ public class LockTimerService extends IntentService {
 	              }
 	          }
 	      }
-	      
-	      	//Time's up, lock the notes
+	      	
+	      	//Time's up, lock the notes if we are not actively using the note list.
+	      	while (settings.getBoolean("inUse", true)){
+	      		try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	      	}
 	    	editor.putString("crypt3", "0000000000000000");
 	    	editor.putString("crypt4", "0000000000000000");
 	    	editor.putBoolean("isLocked", true);
 	    	editor.commit();
-	    	
 	    		    
 	    	mNotificationManager.cancelAll();
 	    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
+	    	
 	    	int pid = android.os.Process.myPid(); 
 	    	android.os.Process.killProcess(pid); 
-		
 	}
 	
 	public void updateNotification(int time){
+		
+		String text = getString(R.string.notify_lock_text) + " " + String.valueOf(time) + " " + getString(R.string.generic_seconds);
+		if (time == 0){
+			text = getString(R.string.noitfy_lock_pending);
+		}
 		//Check that time is greater than 0, if not close down shop.
 		if (time < 0){
 			mNotificationManager.cancelAll();
@@ -95,7 +106,7 @@ public class LockTimerService extends IntentService {
 			        new NotificationCompat.Builder(this)
 			        .setSmallIcon(R.drawable.ic_launcher)
 			        .setContentTitle(getString(R.string.notify_lock_title))
-			        .setContentText(getString(R.string.notify_lock_text) + " " + String.valueOf(time) + " " + getString(R.string.generic_seconds));
+			        .setContentText(text);
 			// Creates an explicit intent for an Activity in your app
 			Intent resultIntent = new Intent(this, MainActivity.class);
 	

@@ -94,4 +94,5 @@
  	<string name="notify_lock_title">YubiNotes</string>
  	<string name="notify_lock_text">Notes will lock in</string>
  	<string name="generic_seconds">seconds</string>
+ 	<string name="noitfy_lock_pending">Waiting for user</string>
 </resources>

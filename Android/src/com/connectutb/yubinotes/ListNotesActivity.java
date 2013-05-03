@@ -1,6 +1,7 @@
 package com.connectutb.yubinotes;
 
 import com.connectutb.yubinotes.util.DbManager;
+import com.connectutb.yubinotes.util.LockTimerService;
 
 import android.app.ActionBar;
 import android.app.DialogFragment;
@@ -30,6 +31,7 @@ public class ListNotesActivity extends ListActivity{
 	private String TAG = "YubiNotes";
 	ListNotesListAdapter lnla;
 	public SharedPreferences settings;
+	public SharedPreferences.Editor editor;
 	
 	public String folderId = "0";
 	public int mode = 0;
@@ -45,6 +47,7 @@ public class ListNotesActivity extends ListActivity{
 		notes = db.listNotes("0",(int)mode);
 		lnla = new ListNotesListAdapter(this, notes);
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
+		editor = settings.edit();
 		setListAdapter(lnla);	
 	}
 
@@ -238,6 +241,20 @@ public class ListNotesActivity extends ListActivity{
          }
          
          updateListAdapter(dirId, mode);
+    }
+    
+    @Override
+    protected void onPause(){
+    	super.onPause();
+    	editor.putBoolean("inUse", false);
+    	editor.commit();
+    }
+    
+    @Override
+    protected void onResume(){
+    	super.onResume();
+    	editor.putBoolean("inUse", true);
+    	editor.commit();
     }
     
     public void updateListAdapter(String dirId, int mode){
