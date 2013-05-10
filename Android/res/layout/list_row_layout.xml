@@ -60,5 +60,13 @@
         android:layout_marginRight="25dp"
         android:onClick="unFavoriteNote"
         android:text="@string/note_fav" />
+    
+    <RelativeLayout
+	    android:id="@+id/layoutNotesColorBar"
+	    android:layout_width="4dp"
+	    android:layout_height="55dp"
+	    android:layout_alignParentRight="true"
+	    android:background="#7bad32" >
+	</RelativeLayout>
    
 </RelativeLayout>

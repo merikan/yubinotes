@@ -107,7 +107,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> l, View v, int position,
 					long id) {
-				// TODO Auto-generated method stub
+				//Update lock status
+				isLocked = settings.getBoolean("isLocked", true);
+				updateStatusIndicator(isLocked);
 		        Intent i = new Intent(MainActivity.this, ListNotesActivity.class);
 		        i.putExtra("mode", (int)id);
 		    	//If ignore lock is disabled, only proceed if notes are unlocked
@@ -126,10 +128,6 @@ public class MainActivity extends Activity {
 		    				}
 		    			}
 		    		}else{
-		    			if (settings.getBoolean("timelock", true) == true){
-		    				Intent intent = new Intent(context, LockTimerService.class);
-		    				startService(intent);
-		    			}
 		    			startActivity(i);
 		    		}
 		    	}
@@ -153,6 +151,13 @@ public class MainActivity extends Activity {
 	   
 	}
 	
+	public void startLockTimer(){
+		if (settings.getBoolean("timelock", true) == true){
+			Intent intent = new Intent(context, LockTimerService.class);
+			startService(intent);
+		}
+	}
+	
 	/* Action on menu selection */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
@@ -164,6 +169,9 @@ public class MainActivity extends Activity {
     		return true;
     	//Settings
     	case R.id.action_settings:
+    		//Update lock status
+			isLocked = settings.getBoolean("isLocked", true);
+			updateStatusIndicator(isLocked);
     		Intent settingsIntent = new Intent(this, Preferences.class);
     		if (isLocked){
     			Toast.makeText(getBaseContext(), R.string.unlock_first, Toast.LENGTH_SHORT).show();
@@ -324,12 +332,15 @@ public class MainActivity extends Activity {
     	editor.putBoolean("isLocked", true);
     	editor.commit();
     	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
+    	Log.d(TAG, "Locking notes");
     	isLocked = true;
     	updateStatusIndicator(isLocked);
     	invalidateOptionsMenu();
     }
     
     public void updateStatusIndicator(boolean locked){
+    	locked = settings.getBoolean("isLocked", true);
+    	Log.d(TAG, "Updating lock status");
     	if (locked){
     		statusLayout.setBackgroundColor(Color.parseColor("#ed0000"));
     		statusText.setText(R.string.status_notes_locked);
@@ -337,6 +348,7 @@ public class MainActivity extends Activity {
     		statusLayout.setBackgroundColor(Color.parseColor("#7bab32"));
     		statusText.setText(R.string.status_notes_unlocked);
     	}
+    	invalidateOptionsMenu();
     }
     public void unlockNotesYubiOffline(){
     	/*
@@ -360,7 +372,7 @@ public class MainActivity extends Activity {
     	updateStatusIndicator(isLocked);
     	invalidateOptionsMenu();
     	Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
-    	
+    	startLockTimer();
     }
     
     public String xorTheKeys(String s, String key ){
@@ -382,6 +394,8 @@ public class MainActivity extends Activity {
         return out;  
     }
     
+
+    
     public void checkPassword(String hash, boolean newPassword){
     	String iv = settings.getString("crypt1", "");
     	String secret = settings.getString("crypt2", "");
@@ -400,6 +414,7 @@ public class MainActivity extends Activity {
     	    	isLocked = false;
     	    	updateStatusIndicator(isLocked);
     	    	invalidateOptionsMenu();
+    	    	startLockTimer();
     			Toast.makeText(this, R.string.keys_unlocked, Toast.LENGTH_SHORT).show();
     		} else{
     			Toast.makeText(this, R.string.wrong_password, Toast.LENGTH_SHORT).show();

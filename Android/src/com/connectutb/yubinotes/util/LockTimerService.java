@@ -87,9 +87,8 @@ public class LockTimerService extends IntentService {
 	    		    
 	    	mNotificationManager.cancelAll();
 	    	Toast.makeText(this, R.string.keys_locked, Toast.LENGTH_SHORT).show();
-	    	
-	    	int pid = android.os.Process.myPid(); 
-	    	android.os.Process.killProcess(pid); 
+	    	Log.d("YubiNotes", "Locking notes from service");
+	    	stopSelf();
 	}
 	
 	public void updateNotification(int time){

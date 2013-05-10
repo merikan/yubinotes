@@ -3,12 +3,14 @@ package com.connectutb.yubinotes;
 import com.connectutb.yubinotes.util.DbManager;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainListAdapter extends ArrayAdapter<String>{
@@ -25,6 +27,7 @@ public class MainListAdapter extends ArrayAdapter<String>{
 		public TextView textViewTitle;
 		public TextView textViewCount;
 		public ImageView imageViewIcon;
+		public RelativeLayout colorBar;
 	}
 
 	@Override
@@ -44,6 +47,7 @@ public class MainListAdapter extends ArrayAdapter<String>{
 			holder.textViewTitle = (TextView) rowView.findViewById(R.id.textViewTitle);
 			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewIcon);
 			holder.textViewCount = (TextView ) rowView.findViewById(R.id.textViewCount);
+			holder.colorBar = (RelativeLayout) rowView.findViewById(R.id.layoutMainColorBar);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
@@ -56,15 +60,19 @@ public class MainListAdapter extends ArrayAdapter<String>{
 		DbManager db = new DbManager(context);
 		if (id==0){
 			holder.imageViewIcon.setImageResource(R.drawable.collection);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#00b2d2"));
 		}
 		else if(id==1){
 			holder.imageViewIcon.setImageResource(R.drawable.recent);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#cb0458"));
 		}
 		else if(id==2){
 			holder.imageViewIcon.setImageResource(R.drawable.star);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#aed10b"));
 		}
 		else if(id==3){
 			holder.imageViewIcon.setImageResource(R.drawable.trash);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#e27000"));
 		}
 		
 		int itemCount = db.getCount(id);

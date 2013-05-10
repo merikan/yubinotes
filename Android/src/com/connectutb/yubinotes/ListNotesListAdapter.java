@@ -1,6 +1,7 @@
 package com.connectutb.yubinotes;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class ListNotesListAdapter extends ArrayAdapter<String>{
@@ -26,6 +28,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		public TextView textViewTimestamp;
 		public ImageView imageViewIcon;
 		public Button buttonFav;
+		public RelativeLayout colorBar;
 	}
 	
 	@Override
@@ -84,6 +87,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder.textViewTimestamp = (TextView) rowView.findViewById(R.id.textViewNoteDate);
 			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewNoteIcon);
 			holder.buttonFav = (Button) rowView.findViewById(R.id.buttonNoteFav);
+			holder.colorBar = (RelativeLayout) rowView.findViewById(R.id.layoutMainColorBar);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
@@ -103,8 +107,10 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 		int noteType = Integer.parseInt(arrayString[9]);
 		if (noteType==1){
 			holder.imageViewIcon.setImageResource(R.drawable.note);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#0090f4"));
 		}else{
 			holder.imageViewIcon.setImageResource(R.drawable.collection);
+			holder.colorBar.setBackgroundColor(Color.parseColor("#3e9114"));
 		}
 		
 		Typeface tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf");

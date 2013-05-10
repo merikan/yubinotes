@@ -11,6 +11,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -49,6 +50,7 @@ public class ListNotesActivity extends ListActivity{
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
 		editor = settings.edit();
 		setListAdapter(lnla);	
+		checkLockStatusTimer();
 	}
 
 	@Override
@@ -263,6 +265,25 @@ public class ListNotesActivity extends ListActivity{
         setListAdapter(lnla);	
     }
     
+    public void checkLockStatusTimer(){
+    	final Handler handler=new Handler();
+    	final Runnable r = new Runnable()
+    	{
+    	    public void run() 
+    	    {
+    	    	boolean locked = settings.getBoolean("isLocked", true);
+    	    	if(locked){
+    	    		finish();
+    	    	}else{
+    	    		Log.d(TAG, "Checking..");
+    	    		handler.postDelayed(this, 1000);
+    	    	}
+    	    }
+    	};
+    	handler.postDelayed(r, 1000);
+    }
+    
+    
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id){
     	super.onListItemClick(l, v, position, id);
@@ -360,6 +381,8 @@ public class ListNotesActivity extends ListActivity{
     
     @Override
     protected void onStop() {
+    	editor.putBoolean("inUse", false);
+    	editor.commit();
         setResult(2);
         super.onStop();
     }
