@@ -87,7 +87,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder.textViewTimestamp = (TextView) rowView.findViewById(R.id.textViewNoteDate);
 			holder.imageViewIcon = (ImageView) rowView.findViewById(R.id.imageViewNoteIcon);
 			holder.buttonFav = (Button) rowView.findViewById(R.id.buttonNoteFav);
-			holder.colorBar = (RelativeLayout) rowView.findViewById(R.id.layoutMainColorBar);
+			holder.colorBar = (RelativeLayout) rowView.findViewById(R.id.layoutNotesColorBar);
 			rowView.setTag(holder);
 		} else {
 			holder = (ViewHolder) rowView.getTag();
