@@ -64,7 +64,7 @@
     <RelativeLayout
 	    android:id="@+id/layoutNotesColorBar"
 	    android:layout_width="4dp"
-	    android:layout_height="55dp"
+	    android:layout_height="68dp"
 	    android:layout_alignParentRight="true"
 	    android:background="#7bad32" >
 	</RelativeLayout>
