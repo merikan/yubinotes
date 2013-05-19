@@ -42,7 +42,11 @@ public class LockTimerService extends IntentService {
 		  /* Load our preferences */
 		settings = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 		editor = settings.edit();
-		intervalInSecs = Integer.valueOf(settings.getString("timelock_interval", "0"));
+		intervalInSecs = Integer.valueOf(settings.getString("timelock_interval", "60"));
+		// Do this in case someone has set the value to 0
+		if (intervalInSecs < 3){
+			intervalInSecs = 60;
+		}
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		
 		/* First we create a notification if set to do so */
@@ -52,6 +56,7 @@ public class LockTimerService extends IntentService {
 		}
 		/* Then we lock the notes after a period of time */
 		int timeLeft = intervalInSecs;
+		Log.d("YubiNotes", String.valueOf(intervalInSecs));
 		long endTime = System.currentTimeMillis() + intervalInSecs * 1000;
 	      while (System.currentTimeMillis() < endTime) {
 	          synchronized (this) {
