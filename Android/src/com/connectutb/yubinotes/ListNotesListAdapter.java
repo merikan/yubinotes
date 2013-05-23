@@ -102,7 +102,7 @@ public class ListNotesListAdapter extends ArrayAdapter<String>{
 			holder.buttonFav.setVisibility(View.GONE);
 		}
 		
-		String noteText = arrayString[2];
+		//String noteText = arrayString[2];
 		// Set appropriate icon 
 		int noteType = Integer.parseInt(arrayString[9]);
 		if (noteType==1){

@@ -16,6 +16,7 @@
 	    android:layout_marginRight="5dp"
 	    android:layout_marginBottom="5dp"
 	    android:layout_height="200dp"
+	    android:onClick="enableNoteEdit"
 	    android:hint="@string/note_text_hint"
 	    android:textAppearance="?android:attr/textAppearanceMedium" />
 

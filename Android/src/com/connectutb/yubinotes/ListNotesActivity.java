@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ShareActionProvider;
@@ -391,4 +392,9 @@ public class ListNotesActivity extends ListActivity{
         setResult(2);
         super.onDestroy();
     }
+    
+    public void enableNoteEdit(View v){
+    	EditText noteTextView = (EditText) v.findViewById(R.id.textViewViewNoteText);
+		noteTextView.setFocusable(true);
+	}
 }
