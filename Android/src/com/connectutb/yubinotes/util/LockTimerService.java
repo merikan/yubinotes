@@ -131,6 +131,7 @@ public class LockTimerService extends IntentService {
 			mBuilder.setProgress(intervalInSecs, time, false);
 	        // Displays the progress bar for the first time.
 			mBuilder.setContentIntent(resultPendingIntent);
+			mBuilder.setOngoing(true);
 			// mId allows you to update the notification later on.
 			mNotificationManager.notify(nId, mBuilder.build());
 		}
