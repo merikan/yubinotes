@@ -395,6 +395,7 @@ public class ListNotesActivity extends ListActivity{
     
     public void enableNoteEdit(View v){
     	EditText noteTextView = (EditText) v.findViewById(R.id.textViewViewNoteText);
-		noteTextView.setFocusable(true);
+    	noteTextView.setFocusableInTouchMode(true);
+    	noteTextView.setFocusable(true);
 	}
 }

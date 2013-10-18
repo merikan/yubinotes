@@ -83,7 +83,6 @@ public class ViewNoteDialog extends DialogFragment{
 	    noteTextView = (EditText) v.findViewById(R.id.textViewViewNoteText);
 	    noteTitleView.setText(noteTitle);
 	    noteTextView.setText(noteText);
-	    noteTextView.setFocusable(false);
 	    Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Roboto-Light.ttf");
 	    noteTitleView.setTypeface(tf);
 	    noteTextView.setTypeface(tf);
