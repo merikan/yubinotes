@@ -38,10 +38,10 @@ When decrypting notes in YubiKey mode, the procedure is similar.
 The string provided by the YubiKey is XOR'ed first with the first key, and then with the second. The resulting two values are used as IV and key and used for decrypting the notes.
 
 
-Todo
+Todo (In no particular order)
 ===
 * OnResume polish
-* Sharing Features
 * Bug Fixes
 * Widget
-
+* Rewrite logic!
+* Tablet support (Fragments) 
