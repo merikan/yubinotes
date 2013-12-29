@@ -1,4 +1,4 @@
-yubinotes
+YubiNotes
 =========
 
 Open source secure notes app for Android that supports using either a password or the YubiKey NEO to encrypt/decrypt notes. Encryption/Decryption is based on a simple lock system that stores and wipes necessary keys for decryption. 
