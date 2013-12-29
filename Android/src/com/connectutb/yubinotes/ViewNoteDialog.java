@@ -44,6 +44,12 @@ public class ViewNoteDialog extends DialogFragment{
         folderId = getArguments().getString("folderId");
         noteTitle = getArguments().getString("title");
         noteText = getArguments().getString("text");
+        
+        //TODO: Remove the added whitespaces at the end of the note
+        while (noteText.endsWith(" ")){
+        	noteText = noteText.substring(0,noteText.length()-1);
+        }
+       
         noteId = getArguments().getInt("noteId");
 	}
 	
