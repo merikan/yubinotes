@@ -278,8 +278,7 @@ public class MainActivity extends Activity {
     }
     
     @Override
-    public void onResume() {
-    	
+    public void onResume() { 	
         super.onResume();
     	PendingIntent pendingIntent = PendingIntent.getActivity(
     			this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
@@ -289,20 +288,20 @@ public class MainActivity extends Activity {
     	if (settings.getBoolean("autolock", true) == true){
     		//.. Its not a good idea..
     	}
-    	// register for all NDEF tags starting with http och https
+    	// register for all NDEF tags starting with http and https
     	IntentFilter ndef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
     	ndef.addDataScheme("http");
     	ndef.addDataScheme("https");
     	try{
-    	// register for foreground dispatch so we'll receive tags according to our intent filters
-    	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
-    			this, pendingIntent, new IntentFilter[] {ndef}, null);
-        
-    	String data = getIntent().getDataString();
-    	editor.putBoolean("nfc_present", true);
-        if(data != null) {
-        	handleOTP(data);
-        }
+	    	// register for foreground dispatch so we'll receive tags according to our intent filters
+	    	NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(
+	    			this, pendingIntent, new IntentFilter[] {ndef}, null);
+	        
+	    	String data = getIntent().getDataString();
+	    	editor.putBoolean("nfc_present", true);
+	        if(data != null) {
+	        	handleOTP(data);
+	        }
     	} catch (NullPointerException e){
     		//No NFC present
     		Log.d(TAG, "No NFC Present, moving on");
